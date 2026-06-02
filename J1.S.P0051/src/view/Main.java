@@ -97,7 +97,9 @@ public class Main {
         double weight = Validation.getDouble("Enter weight (kg): ", MIN_WEIGHT, MAX_WEIGHT);
         double height = Validation.getDouble("Enter height (cm): ", MIN_HEIGHT, MAX_HEIGHT);
         
+        double bmi = Calculator.getBMINumber(weight, height);
         BMIStatus status = Calculator.calculateBMI(weight, height);
+        System.out.printf("BMI Number: %.2f%", bmi);
         System.out.println("BMI Status: " + status.getDescription());
     }
 

@@ -37,15 +37,25 @@ public class Calculator {
     }
     
     /**
+     * Calculates BMI (Body Mass Index) value
+     * @param weight Weight in kilograms
+     * @param height Height in centimeters
+     * @return The calculated BMI value
+     */
+    public static double getBMINumber(double weight, double height) {
+        // Convert height from centimeters to meters
+        double heightInMeters = height / 100.0;
+        return weight / (heightInMeters * heightInMeters);
+    }
+
+    /**
      * Calculates BMI (Body Mass Index) and returns the status
      * @param weight Weight in kilograms
      * @param height Height in centimeters
      * @return BMIStatus enum indicating the user's weight category
      */
     public static BMIStatus calculateBMI(double weight, double height) {
-        // Convert height from centimeters to meters
-        double heightInMeters = height / 100.0;
-        double bmi = weight / (heightInMeters * heightInMeters);
+        double bmi = getBMINumber(weight, height);
         
         if (bmi < 19) {
             return BMIStatus.UNDER_STANDARD;
