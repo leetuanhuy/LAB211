@@ -99,7 +99,7 @@ public class Main {
         
         double bmi = Calculator.getBMINumber(weight, height);
         BMIStatus status = Calculator.calculateBMI(weight, height);
-        System.out.printf("BMI Number: %.2f%", bmi);
+        System.out.printf("BMI Number: %.2f%n", bmi);
         System.out.println("BMI Status: " + status.getDescription());
     }
 
