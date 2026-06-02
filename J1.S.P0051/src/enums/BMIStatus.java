@@ -1,4 +1,4 @@
-package model;
+package enums;
 
 /**
  * Enum representing BMI (Body Mass Index) status categories

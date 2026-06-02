@@ -1,7 +1,7 @@
 package service;
 
-import model.Operator;
-import model.BMIStatus;
+import enums.Operator;
+import enums.BMIStatus;
 
 /**
  * Calculator class for performing arithmetic operations and BMI calculations

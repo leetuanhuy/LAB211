@@ -1,8 +1,8 @@
 package view;
 
 import service.Calculator;
-import model.Operator;
-import model.BMIStatus;
+import enums.Operator;
+import enums.BMIStatus;
 import utils.Validation;
 
 /**
@@ -25,17 +25,20 @@ public class Main {
      * @param args Command line arguments (not used)
      */
     public static void main(String[] args) {
+        OUTER:
         while (true) {
             displayMenu();
             int choice = Validation.getInt("Select option (1-3): ", MIN_CHOICE, MAX_CHOICE);
-            
-            if (choice == 1) {
-                normalCalculator();
-            } else if (choice == 2) {
-                bmiCalculator();
-            } else {
-                System.out.println("Exit program. Goodbye!");
-                break;
+            switch (choice) {
+                case 1:
+                    normalCalculator();
+                    break;
+                case 2:
+                    bmiCalculator();
+                    break;
+                default:
+                    System.out.println("Exit program. Goodbye!");
+                    break OUTER;
             }
         }
     }
@@ -69,7 +72,7 @@ public class Main {
             }
             
             if (operator == Operator.EQUAL) {
-                System.out.println("Result:" + memory);
+                System.out.println("Result:" + formatNumber(memory));
                 return;
             }
             
@@ -77,7 +80,7 @@ public class Main {
             
             try {
                 memory = Calculator.calculate(memory, operator, number);
-                System.out.println("Memory:" + memory);
+                System.out.println("Memory:" + formatNumber(memory));
             } catch (ArithmeticException e) {
                 System.out.println("Error: " + e.getMessage());
                 return;
@@ -96,5 +99,21 @@ public class Main {
         
         BMIStatus status = Calculator.calculateBMI(weight, height);
         System.out.println("BMI Status: " + status.getDescription());
+    }
+
+    /**
+     * Formats a number to display as integer if it's a whole number,
+     * otherwise displays as double with decimal places
+     * @param num The number to format
+     * @return Formatted string representation of the number
+     */
+    private static String formatNumber(double num) {
+        if (num % 1 == 0) {
+            // If the number is a whole number, display as integer
+            return String.valueOf((long) num);
+        } else {
+            // Otherwise, display as double
+            return String.valueOf(num);
+        }
     }
 }
