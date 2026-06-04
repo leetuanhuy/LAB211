@@ -41,6 +41,8 @@ public class Validation {
     /**
      * Get double input from user with validation
      * @param msg Display message
+     * @param msgErrorRange
+     * @param msgWrongFormat
      * @param min Minimum value
      * @param max Maximum value
      * @return Valid double within range
@@ -82,12 +84,9 @@ public class Validation {
      * Get date input from user with format validation
      * Format required: dd-MMM-yyyy (example: 11-Apr-2009)
      * @param msg Display message
-     * @param errEmpty Error message if empty
-     * @param errFormat Error message if format invalid
-     * @param errInvalid Error message if date invalid
      * @return Valid date string in dd-MMM-yyyy format
      */
-    public static String getDate(String msg, String errEmpty, String errFormat, String errInvalid) {
+    public static String getDate(String msg) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy");
         dateFormat.setLenient(false);  // Strict validation (no 32-Apr-2009)
 
@@ -97,13 +96,13 @@ public class Validation {
 
             // Check if empty
             if (input.isEmpty()) {
-                System.err.println(errEmpty);
+                System.err.println("Error: Date cannot be empty!");
                 continue;
             }
 
             // Check format: dd-MMM-yyyy (number-letters-number)
             if (!input.matches("\\d{1,2}-[A-Za-z]{3}-\\d{4}")) {
-                System.err.println(errFormat);
+                System.err.println("Error: Format must be dd-MMM-yyyy (example: 11-Apr-2009)");
                 continue;
             }
 
@@ -111,7 +110,7 @@ public class Validation {
                 dateFormat.parse(input);  // Parse will throw exception if invalid date
                 return input;
             } catch (Exception e) {
-                System.err.println(errInvalid);
+                System.err.println("Error: Invalid date! " + e.getMessage());
             }
         }
     }

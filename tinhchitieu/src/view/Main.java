@@ -9,21 +9,21 @@ import utils.Validation;
 import java.util.List;
 
 /**
- * Main class - User interface
- * Display menu and handle user choices
- * THIS CLASS: Only for displaying UI (View Layer)
+ * Main class - User interface Display menu and handle user choices THIS CLASS:
+ * Only for displaying UI (View Layer)
+ *
  * @author Admin
  */
 public class Main {
+
     private static ExpenseService service;
 
     public static void main(String[] args) {
         service = new ExpenseService();
-        
+
         runProgram();
     }
 
-  
     /**
      * Main program loop - Display menu and handle user choice
      */
@@ -40,18 +40,16 @@ public class Main {
             );
 
             switch (choice) {
-                case 1:
+                case 1 ->
                     addExpenseUI();
-                    break;
-                case 2:
+                case 2 ->
                     displayAllExpensesUI();
-                    break;
-                case 3:
+                case 3 ->
                     deleteExpenseUI();
-                    break;
-                case 4:
+                case 4 -> {
                     exitProgram();
                     return;
+                }
             }
         }
     }
@@ -68,15 +66,18 @@ public class Main {
     }
 
     /**
-     * Option 1: Add an expense
-     * Input: Date, Amount, Content
-     * ID auto increment
+     * Option 1: Add an expense Input: Date, Amount, Content ID auto increment
      */
     private static void addExpenseUI() {
         System.out.println("\n--- ADD AN EXPENSE ---");
 
         // Input date with validation
-        String date = Validation.getDate("Enter date (dd-MMM-yyyy, example: 11-Apr-2009): ");
+        String date = Validation.getDate(
+                "Enter date: ",
+                "Date cannot be empty!",
+                "Format must be dd-MMM-yyyy (example: 11-Apr-2009)",
+                "Invalid date!"
+        );
 
         // Input amount
         double amount = Validation.getDouble(
@@ -101,8 +102,8 @@ public class Main {
     }
 
     /**
-     * Option 2: Display all expenses
-     * This is View Layer - responsibility to format and display
+     * Option 2: Display all expenses This is View Layer - responsibility to
+     * format and display
      */
     private static void displayAllExpensesUI() {
         System.out.println("\n--- DISPLAY ALL EXPENSES ---");
@@ -117,19 +118,16 @@ public class Main {
         // Display each expense
         for (int i = 0; i < list.size(); i++) {
             Expense exp = list.get(i);
-            System.out.printf("%-5d %-15s %-20.2f %s\n", 
+            System.out.printf("%-5d %-15s %-20.2f %s\n",
                     exp.getId(), exp.getDate(), exp.getAmount(), exp.getContent());
         }
 
-        
         System.out.printf("%-5s %-15s %-20.2f\n", "", "Total:", service.getTotalAmount());
     }
 
     /**
-     * Option 3: Delete an expense
-     * Input: Expense ID
-     * If ID not exist: "Delete an expense fail"
-     * If delete success: "Delete an expense successful"
+     * Option 3: Delete an expense Input: Expense ID If ID not exist: "Delete an
+     * expense fail" If delete success: "Delete an expense successful"
      */
     private static void deleteExpenseUI() {
         System.out.println("\n--- REMOVE AN EXPENSE ---");
@@ -168,5 +166,4 @@ public class Main {
         System.exit(0);
     }
 
-  
 }
