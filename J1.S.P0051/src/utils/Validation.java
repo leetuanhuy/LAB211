@@ -8,6 +8,7 @@ import java.util.Scanner;
 
 /**
  * Utility class for validating user input with range checking
+ *
  * @author Admin
  */
 public class Validation {
@@ -16,6 +17,7 @@ public class Validation {
 
     /**
      * Get integer input from user with validation
+     *
      * @param msg Display message
      * @param min Minimum value
      * @param max Maximum value
@@ -39,6 +41,7 @@ public class Validation {
 
     /**
      * Get double input from user with validation
+     *
      * @param msg Display message
      * @param min Minimum value
      * @param max Maximum value
@@ -62,6 +65,7 @@ public class Validation {
 
     /**
      * Get string input from user with validation
+     *
      * @param msg Display message
      * @param err Error message if input is empty
      * @return Non-empty string
@@ -74,6 +78,23 @@ public class Validation {
                 return s;
             }
             System.err.println(err);
+        }
+    }
+
+    /**
+     * Formats a number to display as integer if it's a whole number, otherwise
+     * displays as double with decimal places
+     *
+     * @param num The number to format
+     * @return Formatted string representation of the number
+     */
+    public static String formatNumber(double num) {
+        if (num % 1 == 0) {
+            // If the number is a whole number, display as integer
+            return String.valueOf((long) num);
+        } else {
+            // Otherwise, display as double
+            return String.valueOf(num);
         }
     }
 }

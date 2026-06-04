@@ -72,7 +72,7 @@ public class Main {
             }
             
             if (operator == Operator.EQUAL) {
-                System.out.println("Result:" + formatNumber(memory));
+                System.out.println("Result:" + Validation.formatNumber(memory));
                 return;
             }
             
@@ -80,7 +80,7 @@ public class Main {
             
             try {
                 memory = Calculator.calculate(memory, operator, number);
-                System.out.println("Memory:" + formatNumber(memory));
+                System.out.println("Memory:" +Validation.formatNumber(memory));
             } catch (ArithmeticException e) {
                 System.out.println("Error: " + e.getMessage());
                 return;
@@ -99,23 +99,10 @@ public class Main {
         
         double bmi = Calculator.getBMINumber(weight, height);
         BMIStatus status = Calculator.calculateBMI(weight, height);
-        System.out.printf("BMI Number: %.2f%n", bmi);
+        System.out.printf("BMI number: %.2f%n", bmi);
         System.out.println("BMI Status: " + status.getDescription());
     }
 
-    /**
-     * Formats a number to display as integer if it's a whole number,
-     * otherwise displays as double with decimal places
-     * @param num The number to format
-     * @return Formatted string representation of the number
-     */
-    private static String formatNumber(double num) {
-        if (num % 1 == 0) {
-            // If the number is a whole number, display as integer
-            return String.valueOf((long) num);
-        } else {
-            // Otherwise, display as double
-            return String.valueOf(num);
-        }
-    }
+    
+   
 }

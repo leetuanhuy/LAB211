@@ -4,25 +4,32 @@
  */
 package service;
 
-import java.util.ArrayList;
+
 
 /**
- *
+ * Linear Search service
  * @author Admin
  */
 public class LinearSearch {
 
     /**
-     *
+     * Find all indices of value in array
      * @param x value to find
-     * @param a the array
-     * @return ArrayList of indices where x is found, empty if not found
+     * @param a array to search
+     * @return indices where x is found
      */
-    public ArrayList<Integer> search(int x, int[] a) {
-        ArrayList<Integer> indices = new ArrayList<>();
+    public int[] search(int x, int[] a) {
+        int count = 0;
         for (int i = 0; i < a.length; i++) {
             if (a[i] == x) {
-                indices.add(i);
+                count++;
+            }
+        }
+        int[] indices = new int[count];
+        int j = 0;
+        for (int i = 0; i < a.length; i++) {
+            if (a[i] == x) {
+                indices[j++] = i;
             }
         }
         return indices;
