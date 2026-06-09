@@ -1,20 +1,73 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Main.java to edit this template
- */
 package view;
 
+import controller.TaskController;
+import utils.Validation;
+
 /**
- *
- * @author Admin
+ * Entry point of the Task Management Program (CCRM).
+ * Displays the main menu and handles user navigation
+ * through the 4 program options.
  */
 public class Main {
 
     /**
-     * @param args the command line arguments
+     * Displays the main menu and prompts user for a choice.
+     *
+     * @return the user's menu choice (1-4)
+     */
+    public static int displayMenu() {
+        System.out.println("\n========== Task Program ==========");
+        System.out.println("1. Add Task");
+        System.out.println("2. Delete Task");
+        System.out.println("3. Display Task");
+        System.out.println("4. Exit");
+        System.out.println("==================================");
+
+        return Validation.getInt("Enter your choice (1-4): ",
+                                "Invalid choice! Please enter 1-4.",
+                                "Invalid input! Please enter a number.",
+                                1, 4);
+    }
+
+    /**
+     * Main entry point of the program.
+     * Creates a TaskController and runs the main menu loop
+     * until the user chooses to exit.
+     *
+     * @param args command-line arguments (not used)
      */
     public static void main(String[] args) {
-        // TODO code application logic here
+        TaskController controller = new TaskController();
+
+        System.out.println("========================================");
+        System.out.println("   Task Management Program (CCRM)");
+        System.out.println("========================================");
+
+        while (true) {
+            try {
+                int choice = displayMenu();
+
+                switch (choice) {
+                    case 1:
+                        controller.addTask();
+                        break;
+                    case 2:
+                        controller.deleteTask();
+                        break;
+                    case 3:
+                        controller.displayTasks();
+                        break;
+                    case 4:
+                        System.out.println("\nThank you! Goodbye!");
+                        return;
+                    default:
+                        System.out.println("Invalid option!");
+                }
+            } catch (NullPointerException ex) {
+                System.err.println("NullPointerException: " + ex.getMessage());
+            } catch (Exception ex) {
+                System.err.println("Error: " + ex.getMessage());
+            }
+        }
     }
-    
 }
