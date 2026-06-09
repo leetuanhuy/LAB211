@@ -1,7 +1,6 @@
 package controller;
 
 import entity.Task;
-import entity.TaskType;
 import service.TaskService;
 import utils.Validation;
 import java.util.List;
@@ -32,9 +31,10 @@ public class TaskController {
             System.out.println("\n---------- Add Task ----------");
 
             System.out.println("\n--- Task Types ---");
-            for (TaskType type : service.getTaskTypes()) {
-                System.out.println(type);
-            }
+            System.out.println("1 - Code");
+            System.out.println("2 - Test");
+            System.out.println("3 - Design");
+            System.out.println("4 - Review");
             System.out.println("------------------");
 
             int taskTypeID = Validation.getInt("Enter Task Type ID (1-4): ",
@@ -64,8 +64,8 @@ public class TaskController {
                                                   "Reviewer cannot be empty!");
 
             int taskId = service.addTask(requirementName, assignee, reviewer,
-                                        String.valueOf(taskTypeID), date,
-                                        String.valueOf(planFrom), String.valueOf(planTo));
+                                       taskTypeID, date,
+                                       planFrom, planTo);
 
             System.out.println("\nSuccess! Task added with ID: " + taskId);
 
@@ -90,7 +90,7 @@ public class TaskController {
                                           "Invalid input! Please enter a number.",
                                           1, Integer.MAX_VALUE);
 
-            service.deleteTask(String.valueOf(taskId));
+            service.deleteTask(taskId);
             System.out.println("\nSuccess! Task ID " + taskId + " has been deleted.");
 
         } catch (NumberFormatException ex) {
@@ -118,11 +118,10 @@ public class TaskController {
             System.out.println("--------------------------------------------------------------------------");
 
             for (Task task : tasks) {
-                String taskTypeName = service.getTaskTypeName(task.getTaskTypeID());
                 System.out.println(String.format("%-5d %-20s %-10s %-12s %-10.1f %-10.1f %-15s %-15s",
                         task.getId(),
                         task.getRequirementName(),
-                        taskTypeName,
+                        task.getTaskTypeName(),
                         task.getDate(),
                         task.getPlanFrom(),
                         task.getPlanTo(),

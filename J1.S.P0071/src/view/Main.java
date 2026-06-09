@@ -10,11 +10,7 @@ import utils.Validation;
  */
 public class Main {
 
-    /**
-     * Displays the main menu and prompts user for a choice.
-     *
-     * @return the user's menu choice (1-4)
-     */
+   
     public static int displayMenu() {
         System.out.println("\n========== Task Program ==========");
         System.out.println("1. Add Task");
@@ -29,13 +25,7 @@ public class Main {
                                 1, 4);
     }
 
-    /**
-     * Main entry point of the program.
-     * Creates a TaskController and runs the main menu loop
-     * until the user chooses to exit.
-     *
-     * @param args command-line arguments (not used)
-     */
+    
     public static void main(String[] args) {
         TaskController controller = new TaskController();
 
@@ -48,20 +38,14 @@ public class Main {
                 int choice = displayMenu();
 
                 switch (choice) {
-                    case 1:
-                        controller.addTask();
-                        break;
-                    case 2:
-                        controller.deleteTask();
-                        break;
-                    case 3:
-                        controller.displayTasks();
-                        break;
-                    case 4:
+                    case 1 -> controller.addTask();
+                    case 2 -> controller.deleteTask();
+                    case 3 -> controller.displayTasks();
+                    case 4 -> {
                         System.out.println("\nThank you! Goodbye!");
                         return;
-                    default:
-                        System.out.println("Invalid option!");
+                    }
+                    default -> System.out.println("Invalid option!");
                 }
             } catch (NullPointerException ex) {
                 System.err.println("NullPointerException: " + ex.getMessage());
