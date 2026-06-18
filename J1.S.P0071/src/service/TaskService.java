@@ -1,14 +1,16 @@
 package service;
 
+import constants.TaskConstants;
 import entity.Task;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Business logic layer for task management.
- * Handles validation and in-memory storage of tasks.
+ * Business logic layer for task management. Handles validation and in-memory
+ * storage of tasks.
  */
 public class TaskService {
+
     private List<Task> tasks;
 
     /**
@@ -22,28 +24,42 @@ public class TaskService {
      * Adds a new task after validating all business rules.
      *
      * @param requirementName the name of the requirement
-     * @param assignee        the person assigned to the task
-     * @param reviewer        the person reviewing the task
-     * @param taskTypeId      the task type ID (1-4)
-     * @param date            the date in dd-MM-yyyy format
-     * @param planFrom        the start time (8.0-17.5, 0.5 increments)
-     * @param planTo          the end time (8.0-17.5, 0.5 increments)
+     * @param assignee the person assigned to the task
+     * @param reviewer the person reviewing the task
+     * @param taskTypeId the task type ID (1-4)
+     * @param date the date in dd-MM-yyyy format
+     * @param planFrom the start time (8.0-17.5, 0.5 increments)
+     * @param planTo the end time (8.0-17.5, 0.5 increments)
      * @return the generated task ID
      * @throws Exception if validation fails
      */
     public int addTask(String requirementName, String assignee, String reviewer,
-                        int taskTypeId, String date, double planFrom, double planTo) throws Exception {
+            int taskTypeId, String date, double planFrom, double planTo)
+            throws Exception {
 
-        if (taskTypeId < 1 || taskTypeId > 4) {
-            throw new Exception("Task Type ID must be between 1 and 4!");
+        if (taskTypeId < TaskConstants.MIN_TASK_TYPE_ID
+                || taskTypeId > TaskConstants.MAX_TASK_TYPE_ID) {
+            throw new Exception("Task Type ID must be between "
+                    + TaskConstants.MIN_TASK_TYPE_ID
+                    + " and "
+                    + TaskConstants.MAX_TASK_TYPE_ID
+                    + "!");
         }
 
-        if (planFrom < 8.0 || planFrom > 17.5 || planTo < 8.0 || planTo > 17.5) {
-            throw new Exception("Time must be between 8.0 and 17.5!");
+        if (planFrom < TaskConstants.MIN_WORK_TIME
+                || planFrom > TaskConstants.MAX_WORK_TIME
+                || planTo < TaskConstants.MIN_WORK_TIME
+                || planTo > TaskConstants.MAX_WORK_TIME) {
+            throw new Exception("Time must be between "
+                    + TaskConstants.MIN_WORK_TIME
+                    + " and "
+                    + TaskConstants.MAX_WORK_TIME
+                    + "!");
         }
 
-        if ((planFrom * 10) % 5 != 0 || (planTo * 10) % 5 != 0) {
-            throw new Exception("Time must be in 0.5 increments (8.0, 8.5, 9.0, ...)!");
+        if ((planFrom * 2) % 1 != 0 || (planTo * 2) % 1 != 0) {
+            throw new Exception("Time must be in " + TaskConstants.WORK_TIME_STEP
+                    + " increments (8.0, 8.5, 9.0, ...)!");
         }
 
         if (planFrom >= planTo) {
@@ -51,7 +67,8 @@ public class TaskService {
         }
 
         int id = getNextId();
-        Task task = new Task(id, taskTypeId, requirementName, date, planFrom, planTo, assignee, reviewer);
+        Task task = new Task(id, taskTypeId, requirementName,
+                date, planFrom, planTo, assignee, reviewer);
         tasks.add(task);
         return id;
     }
@@ -63,11 +80,13 @@ public class TaskService {
      * @throws Exception if the task ID does not exist
      */
     public void deleteTask(int taskId) throws Exception {
-        boolean exists = tasks.stream().anyMatch(t -> t.getId() == taskId);
-        if (!exists) {
-            throw new Exception("Task ID " + taskId + " does not exist!");
+        for (Task task : tasks) {
+            if (task.getId() == taskId) {
+                tasks.remove(task);
+                return;
+            }
         }
-        tasks.removeIf(task -> task.getId() == taskId);
+        throw new Exception("Task ID " + taskId + " does not exist!");
     }
 
     /**

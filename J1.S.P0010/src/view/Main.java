@@ -4,7 +4,9 @@
  */
 package view;
 
+import constant.InputConstants;
 import java.util.Arrays;
+import utils.Validation;
 
 /**
  *
@@ -18,8 +20,18 @@ public class Main {
      */
     public static void main(String[] args) {
 
-        int n = utils.Validation.getInt("Enter number of array: ", 1, Integer.MAX_VALUE);
-        int x = utils.Validation.getInt("Enter number to search: ", 1, Integer.MAX_VALUE);
+        int n = Validation.getInt(
+                "Enter number of array: ",
+                "Out of range! Please enter a positive integer.",
+                "Wrong format! You must input an integer number.",
+                InputConstants.MIN_VALUE,
+                InputConstants.MAX_VALUE);
+        int x = Validation.getInt(
+                "Enter number to search: ",
+                "Out of range! Please enter a positive integer.",
+                "Wrong format! You must input an integer number.",
+                InputConstants.MIN_VALUE,
+                InputConstants.MAX_VALUE);
         service.LinearSearch linearSearch = new service.LinearSearch();
         int[] a = utils.ArrayUtils.generateArray(n, n);
 //        int a[] = {1,2,3,3,4,5,5,3};

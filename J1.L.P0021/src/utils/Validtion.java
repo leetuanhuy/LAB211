@@ -4,8 +4,6 @@
  */
 package utils;
 
-import constants.DateConstants;
-import constants.ValidationConstants;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Scanner;
@@ -105,7 +103,7 @@ public class Validtion {
      */
     public static String getDate(String msg, String errEmpty, String errFormat,
             String errInvalid) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat(DateConstants.DATE_PATTERN);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy");
         dateFormat.setLenient(false);
         while (true) {
             System.out.printf(msg);
@@ -114,7 +112,7 @@ public class Validtion {
                 System.out.println(errEmpty);
                 continue;
             }
-            if (!input.matches(DateConstants.DATE_REGEX)) {
+            if (!input.matches("\\d{1,2}-[A-Za-z]{3}-\\d{4}")) {
                 System.err.println(errFormat);
                 continue;
             }
@@ -128,12 +126,31 @@ public class Validtion {
         }
 
     }
+ 
 
-    public static String formatNumberr(double num) {
-        if (num % ValidationConstants.WHOLE_NUMBER_MODULO == ValidationConstants.WHOLE_NUMBER_REMAINDER) {
-            return String.valueOf((long) num);
-        } else {
-            return String.valueOf(num);
+    public static boolean getYN(String msg) {
+        while (true) {
+            String input = getString(msg, "Input cannot be empty.");
+            if (input.equalsIgnoreCase("Y")) {
+                return true;
+            }
+            if (input.equalsIgnoreCase("N")) {
+                return false;
+            }
+            System.out.println("Please enter Y or N.");
+        }
+    }
+
+    public static String getUD(String msg) {
+        while (true) {
+            String input = getString(msg, "Input cannot be empty.");
+            if (input.equalsIgnoreCase("U")) {
+                return "U";
+            }
+            if (input.equalsIgnoreCase("D")) {
+                return "D";
+            }
+            System.out.println("Please enter U or D.");
         }
     }
 }

@@ -1,5 +1,7 @@
 package entity;
 
+import constants.TaskConstants;
+
 /**
  * Represents a task entity in the task management system.
  * Each task contains information about the work to be done including
@@ -109,10 +111,10 @@ public class Task {
 
     public String getTaskTypeName() {
         switch (taskTypeID) {
-            case 1: return "Code";
-            case 2: return "Test";
-            case 3: return "Design";
-            case 4: return "Review";
+            case TaskConstants.TASK_TYPE_CODE: return "Code";
+            case TaskConstants.TASK_TYPE_TEST: return "Test";
+            case TaskConstants.TASK_TYPE_DESIGN: return "Design";
+            case TaskConstants.TASK_TYPE_REVIEW: return "Review";
             default: return null;
         }
     }

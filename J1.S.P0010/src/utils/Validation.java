@@ -15,27 +15,29 @@ public class Validation {
     public static final Scanner sc = new Scanner(System.in);
 
     /**
+     * Get integer input from user with validation
      *
      * @param msg display message
-     * @param min Minimum the value
-     * @param max Maximum the value
-     * @return integer number if wrong re-input
+     * @param errRange error message if out of range
+     * @param errFormat error message if wrong format
+     * @param min minimum value
+     * @param max maximum value
+     * @return valid integer within correct input
      */
-    public static int getInt(String msg, int min, int max) {
+    public static int getInt(String msg, String errRange, String errFormat,
+            int min, int max) {
         while (true) {
-            System.out.println(msg);
+            System.out.printf(msg);
             try {
                 int n = Integer.parseInt(sc.nextLine());
                 if (n >= min && n <= max) {
                     return n;
                 } else {
-                    System.err.println("Out of range number" + min + " to " + max);
+                    System.out.println(errRange);
                 }
             } catch (NumberFormatException ex) {
-                System.err.println("Wrong format, you must input integer number");
-
+                System.out.println(errFormat);
             }
-
         }
 
     }

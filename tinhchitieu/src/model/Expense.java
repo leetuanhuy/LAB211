@@ -4,7 +4,7 @@
  */
 package model;
 
-
+import constants.ValidationConstants;
 
 /**
  *
@@ -58,7 +58,8 @@ public class Expense {
 
     @Override
     public String toString() {
-        String amountStr = (amount % 1 == 0) ? String.valueOf((long) amount) : String.valueOf(amount);
+        String amountStr = (amount % ValidationConstants.WHOLE_NUMBER_MODULO == ValidationConstants.WHOLE_NUMBER_REMAINDER)
+                ? String.valueOf((long) amount) : String.valueOf(amount);
         return String.format("%-5d %-15s %-20s %s", id, date, amountStr, content);
     }
 }

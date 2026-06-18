@@ -1,5 +1,6 @@
 package controller;
 
+import constants.TaskConstants;
 import entity.Task;
 import service.TaskService;
 import utils.Validation;
@@ -31,31 +32,40 @@ public class TaskController {
             System.out.println("\n---------- Add Task ----------");
 
             System.out.println("\n--- Task Types ---");
-            System.out.println("1 - Code");
-            System.out.println("2 - Test");
-            System.out.println("3 - Design");
-            System.out.println("4 - Review");
+            System.out.println(TaskConstants.TASK_TYPE_CODE + " - Code");
+            System.out.println(TaskConstants.TASK_TYPE_TEST + " - Test");
+            System.out.println(TaskConstants.TASK_TYPE_DESIGN + " - Design");
+            System.out.println(TaskConstants.TASK_TYPE_REVIEW + " - Review");
             System.out.println("------------------");
 
-            int taskTypeID = Validation.getInt("Enter Task Type ID (1-4): ",
-                                              "Task Type ID must be between 1 and 4!",
-                                              "Invalid input! Please enter a number.",
-                                              1, 4);
+            int taskTypeID = Validation.getInt(
+                    "Enter Task Type ID (" + TaskConstants.MIN_TASK_TYPE_ID + "-"
+                            + TaskConstants.MAX_TASK_TYPE_ID + "): ",
+                    "Task Type ID must be between " + TaskConstants.MIN_TASK_TYPE_ID
+                            + " and " + TaskConstants.MAX_TASK_TYPE_ID + "!",
+                    "Invalid input! Please enter a number.",
+                    TaskConstants.MIN_TASK_TYPE_ID, TaskConstants.MAX_TASK_TYPE_ID);
 
             String requirementName = Validation.getString("Enter Requirement Name: ",
                                                          "Requirement Name cannot be empty!");
 
             String date = Validation.getDate("Enter Date (dd-MM-yyyy): ");
 
-            double planFrom = Validation.getDouble("Enter Plan From (8.0-17.5): ",
-                                                  "Time must be between 8.0 and 17.5!",
-                                                  "Invalid input! Please enter a number.",
-                                                  8.0, 17.5);
+            double planFrom = Validation.getDouble(
+                    "Enter Plan From (" + TaskConstants.MIN_WORK_TIME + "-"
+                            + TaskConstants.MAX_WORK_TIME + "): ",
+                    "Time must be between " + TaskConstants.MIN_WORK_TIME
+                            + " and " + TaskConstants.MAX_WORK_TIME + "!",
+                    "Invalid input! Please enter a number.",
+                    TaskConstants.MIN_WORK_TIME, TaskConstants.MAX_WORK_TIME);
 
-            double planTo = Validation.getDouble("Enter Plan To (8.0-17.5): ",
-                                                "Time must be between 8.0 and 17.5!",
-                                                "Invalid input! Please enter a number.",
-                                                8.0, 17.5);
+            double planTo = Validation.getDouble(
+                    "Enter Plan To (" + TaskConstants.MIN_WORK_TIME + "-"
+                            + TaskConstants.MAX_WORK_TIME + "): ",
+                    "Time must be between " + TaskConstants.MIN_WORK_TIME
+                            + " and " + TaskConstants.MAX_WORK_TIME + "!",
+                    "Invalid input! Please enter a number.",
+                    TaskConstants.MIN_WORK_TIME, TaskConstants.MAX_WORK_TIME);
 
             String assignee = Validation.getString("Enter Assignee: ",
                                                   "Assignee cannot be empty!");

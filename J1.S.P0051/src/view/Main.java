@@ -1,44 +1,34 @@
 package view;
 
-import service.Calculator;
-import enums.Operator;
+import constants.InputConstants;
 import enums.BMIStatus;
+import enums.Operator;
+import service.Calculator;
+import utils.Formatter;
 import utils.Validation;
 
 /**
  * Main class for calculator application with normal and BMI calculation features
  */
 public class Main {
-    
-    // Constants for input validation ranges
-    private static final double MIN_NUMBER = -999999;
-    private static final double MAX_NUMBER = 999999;
-    private static final double MIN_WEIGHT = 0.1;
-    private static final double MAX_WEIGHT = 500;
-    private static final double MIN_HEIGHT = 50;
-    private static final double MAX_HEIGHT = 250;
-    private static final int MIN_CHOICE = 1;
-    private static final int MAX_CHOICE = 3;
 
     /**
      * Main entry point for the calculator application
      * @param args Command line arguments (not used)
      */
-    public static void main(String[] args) {
-        OUTER:
+    public static void main(String[] args) {     
         while (true) {
             displayMenu();
-            int choice = Validation.getInt("Select option (1-3): ", MIN_CHOICE, MAX_CHOICE);
+            int choice = Validation.getInt("Select option (1-3): ", 
+                    InputConstants.MIN_CHOICE, InputConstants.MAX_CHOICE);
             switch (choice) {
-                case 1:
-                    normalCalculator();
-                    break;
-                case 2:
-                    bmiCalculator();
-                    break;
-                default:
+                case 1 -> normalCalculator();
+                case 2 -> bmiCalculator();
+                default -> {
                     System.out.println("Exit program. Goodbye!");
-                    break OUTER;
+                    System.exit(0);
+                }
+                    
             }
         }
     }
@@ -60,7 +50,8 @@ public class Main {
      */
     private static void normalCalculator() {
         System.out.println("\n----- Normal Calculator -----");
-        double memory = Validation.getDouble("Enter number: ", MIN_NUMBER, MAX_NUMBER);
+        double memory = Validation.getDouble("Enter number: ",
+                InputConstants.MIN_NUMBER, InputConstants.MAX_NUMBER);
         
         while (true) {
             String opStr = Validation.getString("Enter Operator: ", "Operator cannot be empty");
@@ -72,15 +63,16 @@ public class Main {
             }
             
             if (operator == Operator.EQUAL) {
-                System.out.println("Result:" + Validation.formatNumber(memory));
+                System.out.println("Result:" + Formatter.formatNumber(memory));
                 return;
             }
             
-            double number = Validation.getDouble("Enter number: ", MIN_NUMBER, MAX_NUMBER);
+            double number = Validation.getDouble("Enter number: ",
+                    InputConstants.MIN_NUMBER, InputConstants.MAX_NUMBER);
             
             try {
                 memory = Calculator.calculate(memory, operator, number);
-                System.out.println("Memory:" +Validation.formatNumber(memory));
+                System.out.println("Memory:" +Formatter.formatNumber(memory));
             } catch (ArithmeticException e) {
                 System.out.println("Error: " + e.getMessage());
                 return;
@@ -94,8 +86,10 @@ public class Main {
      */
     private static void bmiCalculator() {
         System.out.println("\n--- BMI Calculator ---");
-        double weight = Validation.getDouble("Enter weight (kg): ", MIN_WEIGHT, MAX_WEIGHT);
-        double height = Validation.getDouble("Enter height (cm): ", MIN_HEIGHT, MAX_HEIGHT);
+        double weight = Validation.getDouble("Enter weight (kg): ", 
+                InputConstants.MIN_WEIGHT, InputConstants.MAX_WEIGHT);
+        double height = Validation.getDouble("Enter height (cm): ",
+                InputConstants.MIN_HEIGHT, InputConstants.MAX_HEIGHT);
         
         double bmi = Calculator.getBMINumber(weight, height);
         BMIStatus status = Calculator.calculateBMI(weight, height);

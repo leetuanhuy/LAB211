@@ -4,6 +4,7 @@
  */
 package view;
 
+import constants.ValidationConstants;
 import java.util.List;
 import model.Expense;
 import service.ExpenseService;
@@ -30,18 +31,18 @@ public class Main {
                     1, 4);
             switch (choice) {
                 case 1 ->
-                    add();
+                    addExpense();
                 case 2 ->
-                    displayAll();
+                    displayAllExpenses();
                 case 3 ->
-                    delete();
+                    deleteExpense();
                 case 4 ->
                     System.exit(0);
             }
         }
     }
 
-    public static void add() {
+    public static void addExpense() {
         System.out.println("-----Add an expense-----");
         String date = Validtion.getDate("Enter date: ",
                 "Do not empty",
@@ -50,7 +51,7 @@ public class Main {
 
         double amount = Validtion.getDouble("Enter Amount: ",
                 "Amount must be >= 0", "Input must be number",
-                0, Double.MAX_VALUE);
+                ValidationConstants.MIN_AMOUNT, ValidationConstants.MAX_AMOUNT);
 
         String content = Validtion.getString("Enter content: ",
                 "Do not empty");
@@ -63,7 +64,7 @@ public class Main {
 
     }
 
-    public static void displayAll() {
+    public static void displayAllExpenses() {
         System.out.println("-----Display all exnpense-------");
         List<Expense> list = service.getAll();
         if (list.isEmpty()) {
@@ -76,16 +77,16 @@ public class Main {
         System.out.printf("%-5s %-15s %-20s\n", "", "Total:", total);
     }
 
-    public static void delete() {
+    public static void deleteExpense() {
         System.out.println("--- Delete an expense ---");
-        if (service.getExpenseCount() == 0) {
+        if (service.getExpenseCount() == ValidationConstants.EMPTY_EXPENSE_COUNT) {
             System.out.println("No expense");
             return;
         }
         int enxpeseId = Validtion.getInt("Enter ID: ",
                 "Invalid ID",
                 "Enter integer number",
-                1, Integer.MAX_VALUE);
+                ValidationConstants.MIN_EXPENSE_ID, ValidationConstants.MAX_EXPENSE_ID);
         if (service.delete(enxpeseId)) {
             System.out.println("delete success");
         } else {

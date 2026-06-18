@@ -1,7 +1,8 @@
 package service;
 
-import enums.Operator;
+import constants.BMIConstants;
 import enums.BMIStatus;
+import enums.Operator;
 
 /**
  * Calculator class for performing arithmetic operations and BMI calculations
@@ -44,7 +45,7 @@ public class Calculator {
      */
     public static double getBMINumber(double weight, double height) {
         // Convert height from centimeters to meters
-        double heightInMeters = height / 100.0;
+        double heightInMeters = height / BMIConstants.HEIGHT_CM_TO_M;
         return weight / (heightInMeters * heightInMeters);
     }
 
@@ -57,13 +58,13 @@ public class Calculator {
     public static BMIStatus calculateBMI(double weight, double height) {
         double bmi = getBMINumber(weight, height);
         
-        if (bmi < 19) {
+        if (bmi < BMIConstants.UNDER_STANDARD_THRESHOLD) {
             return BMIStatus.UNDER_STANDARD;
-        } else if (bmi <= 25) {
+        } else if (bmi <= BMIConstants.STANDARD_MAX) {
             return BMIStatus.STANDARD;
-        } else if (bmi <= 30) {
+        } else if (bmi <= BMIConstants.OVERWEIGHT_MAX) {
             return BMIStatus.OVERWEIGHT;
-        } else if (bmi <= 40) {
+        } else if (bmi <= BMIConstants.FAT_MAX) {
             return BMIStatus.FAT;
         } else {
             return BMIStatus.VERY_FAT;

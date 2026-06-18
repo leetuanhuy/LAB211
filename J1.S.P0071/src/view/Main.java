@@ -10,7 +10,6 @@ import utils.Validation;
  */
 public class Main {
 
-   
     public static int displayMenu() {
         System.out.println("\n========== Task Program ==========");
         System.out.println("1. Add Task");
@@ -20,12 +19,11 @@ public class Main {
         System.out.println("==================================");
 
         return Validation.getInt("Enter your choice (1-4): ",
-                                "Invalid choice! Please enter 1-4.",
-                                "Invalid input! Please enter a number.",
-                                1, 4);
+                "Invalid choice! Please enter 1-4.",
+                "Invalid input! Please enter a number.",
+                1, 4);
     }
 
-    
     public static void main(String[] args) {
         TaskController controller = new TaskController();
 
