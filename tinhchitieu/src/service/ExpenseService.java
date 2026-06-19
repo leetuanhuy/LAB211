@@ -4,6 +4,7 @@
  */
 package service;
 
+import constant.InputConstant;
 import java.util.ArrayList;
 import java.util.List;
 import model.Expense;
@@ -15,6 +16,7 @@ import model.Expense;
 public class ExpenseService {
 
     private final ArrayList<Expense> expenses;
+    private int nextId = InputConstant.MIN_EXPENSE_ID;
 
     public ExpenseService() {
         this.expenses = new ArrayList<>();
@@ -31,23 +33,7 @@ public class ExpenseService {
     }
 
     /**
-     * Helper: Calculate next ID. Formula: next ID = max ID + 1. If list
-     * empty,max ID = 0 so return 1
-     *
-     * @return next Id
-     */
-    private int getNextId() {
-        int maxId = 0;
-        for (Expense exp : expenses) {
-            if (exp.getId() > maxId) {
-                maxId = exp.getId();
-            }
-        }
-        return maxId + 1;
-    }
-
-    /**
-     * Add expense to list ID auto increment: new ID = max ID + 1
+     * Add expense to list. ID auto increment, not reuse after delete.
      *
      * @param date date of expense
      * @param amount amount of money
@@ -56,9 +42,9 @@ public class ExpenseService {
      */
     public boolean add(String date, double amount, String content) {
         try {
-            int nextId = getNextId();
             Expense expense = new Expense(nextId, date, amount, content);
             expenses.add(expense);
+            nextId++;
             return true;
         } catch (Exception e) {
             System.err.println("Add faild");

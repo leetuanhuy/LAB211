@@ -4,7 +4,7 @@
  */
 package view;
 
-import constants.ValidationConstants;
+import constant.InputConstant;
 import java.util.List;
 import model.Expense;
 import service.ExpenseService;
@@ -28,7 +28,7 @@ public class Main {
             int choice = Validtion.getInt("Enter your choice: ",
                     "Choose option 1-4",
                     "Enter integer number",
-                    1, 4);
+                    InputConstant.MIN_CHOICE, InputConstant.MAX_CHOICE);
             switch (choice) {
                 case 1 ->
                     addExpense();
@@ -51,7 +51,7 @@ public class Main {
 
         double amount = Validtion.getDouble("Enter Amount: ",
                 "Amount must be >= 0", "Input must be number",
-                ValidationConstants.MIN_AMOUNT, ValidationConstants.MAX_AMOUNT);
+                InputConstant.MIN_AMOUNT, InputConstant.MAX_AMOUNT);
 
         String content = Validtion.getString("Enter content: ",
                 "Do not empty");
@@ -69,24 +69,26 @@ public class Main {
         List<Expense> list = service.getAll();
         if (list.isEmpty()) {
             System.out.println("No expense");
+            return;
         }
+        System.out.printf("%-5s %-15s %-20s %s%n", "ID", "Date", "Amount of money", "Content");
         for (Expense exp : list) {
             System.out.println(exp);
         }
         String total = Validtion.formatNumberr(service.getTotalAmount());
-        System.out.printf("%-5s %-15s %-20s\n", "", "Total:", total);
+        System.out.printf("%-5s %-15s %-20s%n", "", "Total:", total);
     }
 
     public static void deleteExpense() {
         System.out.println("--- Delete an expense ---");
-        if (service.getExpenseCount() == ValidationConstants.EMPTY_EXPENSE_COUNT) {
+        if (service.getExpenseCount() == InputConstant.EMPTY_EXPENSE_COUNT) {
             System.out.println("No expense");
             return;
         }
         int enxpeseId = Validtion.getInt("Enter ID: ",
                 "Invalid ID",
                 "Enter integer number",
-                ValidationConstants.MIN_EXPENSE_ID, ValidationConstants.MAX_EXPENSE_ID);
+                InputConstant.MIN_EXPENSE_ID, InputConstant.MAX_EXPENSE_ID);
         if (service.delete(enxpeseId)) {
             System.out.println("delete success");
         } else {
