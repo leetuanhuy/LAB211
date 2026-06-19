@@ -12,6 +12,7 @@ import java.util.List;
 public class TaskService {
 
     private List<Task> tasks;
+    private int nextId = TaskConstants.MIN_TASK_ID;
 
     /**
      * Constructs a TaskService with an empty task list.
@@ -66,10 +67,11 @@ public class TaskService {
             throw new Exception("Plan From must be less than Plan To!");
         }
 
-        int id = getNextId();
+       int id = nextId;
         Task task = new Task(id, taskTypeId, requirementName,
                 date, planFrom, planTo, assignee, reviewer);
         tasks.add(task);
+        nextId++;
         return id;
     }
 
@@ -98,18 +100,5 @@ public class TaskService {
         return tasks;
     }
 
-    /**
-     * Generates the next available task ID by finding the max existing ID.
-     *
-     * @return next ID = max existing ID + 1
-     */
-    private int getNextId() {
-        int maxId = 0;
-        for (Task task : tasks) {
-            if (task.getId() > maxId) {
-                maxId = task.getId();
-            }
-        }
-        return maxId + 1;
-    }
+   
 }
