@@ -2,9 +2,9 @@ package main;
 
 import constant.InputConstant;
 import java.util.Arrays;
-import search.LinearSearch;
-import utility.ArrayUtils;
-import utility.InputValidator;
+import algorithm.LinearSearch;
+import utils.ArrayUtils;
+import utils.InputValidator;
 
 /**
  *

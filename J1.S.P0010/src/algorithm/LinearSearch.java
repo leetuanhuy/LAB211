@@ -1,14 +1,11 @@
-package search;
+package algorithm;
 
 /**
  *
  * @author Admin
  */
 public class LinearSearch {
-
-    private LinearSearch() {
-    }
-
+   
     /**
      * Find all indices of value in array
      *

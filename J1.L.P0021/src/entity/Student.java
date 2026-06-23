@@ -1,8 +1,5 @@
 package entity;
 
-/**
- * Represents a student registration record.
- */
 public class Student {
     private String id;
     private String studentName;
@@ -12,14 +9,6 @@ public class Student {
     public Student() {
     }
 
-    /**
-     * Constructs a new Student with the given details.
-     *
-     * @param id unique registration ID
-     * @param studentName student's full name
-     * @param semester semester of enrollment
-     * @param courseName course name (Java, .Net, or C/C++)
-     */
     public Student(String id, String studentName, String semester, String courseName) {
         this.id = id;
         this.studentName = studentName;
@@ -59,11 +48,6 @@ public class Student {
         this.courseName = courseName;
     }
 
-    /**
-     * Returns student info formatted as "Name | Semester | Course".
-     *
-     * @return formatted string
-     */
     @Override
     public String toString() {
         return studentName + " | " + semester + " | " + courseName;

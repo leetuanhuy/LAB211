@@ -19,21 +19,27 @@ public class Calculator {
      */
     public static double calculate(double a, Operator operator, double b) {
         switch (operator) {
-            case ADD:
+            case ADD -> {
                 return a + b;
-            case SUBTRACT:
+            }
+            case SUBTRACT -> {
                 return a - b;
-            case MULTIPLY:
+            }
+            case MULTIPLY -> {
                 return a * b;
-            case DIVIDE:
+            }
+            case DIVIDE -> {
                 if (b == 0) {
                     throw new ArithmeticException("Cannot divide by zero");
                 }
                 return a / b;
-            case EXPONENT:
+            }
+            case EXPONENT -> {
                 return Math.pow(a, b);
-            default:
+            }
+            default -> {
                 return 0;
+            }
         }
     }
     

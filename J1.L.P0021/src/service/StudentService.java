@@ -1,174 +1,152 @@
 package service;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import entity.Student;
-import repository.StudentRepository;
-import utils.Validtion;
+import static constant.AppConstant.MIN_STUDENTS;
 
 /**
- * Provides business logic for student management operations.
+ * Handles business logic for student management. Data is stored in-memory.
  */
 public class StudentService {
-    private static final int MIN_STUDENTS = 10;
-    private static final String[] VALID_COURSES = {"Java", ".Net", "C/C++"};
 
-    private final StudentRepository repository;
+    private final List<Student> students;
 
     public StudentService() {
-        this.repository = new StudentRepository();
+        this.students = new ArrayList<>();
         initSampleData();
     }
 
     private void initSampleData() {
-        repository.add(new Student("S01", "Nguyen Van A", "Spring2024", "Java"));
-        repository.add(new Student("S02", "Nguyen Van A", "Fall2024", "Java"));
-        repository.add(new Student("S03", "Nguyen Van B", "Spring2024", ".Net"));
-        repository.add(new Student("S04", "Nguyen Van B", "Fall2024", "Java"));
-        repository.add(new Student("S05", "Nguyen Van C", "Spring2024", "Java"));
-        repository.add(new Student("S06", "Nguyen Van C", "Fall2024", "C/C++"));
-        repository.add(new Student("S07", "Tran Van D", "Spring2024", ".Net"));
-        repository.add(new Student("S08", "Le Van E", "Fall2024", "Java"));
-        repository.add(new Student("S09", "Pham Van F", "Spring2024", "C/C++"));
+        students.add(new Student("S01", "Nguyen Van A", "Spring2024", "Java"));
+        students.add(new Student("S01", "Nguyen Van A", "Fall2024", ".NET"));
+        students.add(new Student("S03", "Nguyen Van B", "Spring2024", ".Net"));
+        students.add(new Student("S04", "Nguyen Van B", "Fall2024", "Java"));
+        students.add(new Student("S05", "Nguyen Van C", "Spring2024", "Java"));
+        students.add(new Student("S01", "Nguyen Van A", "Spring2024", "C#"));
+        students.add(new Student("S01", "Nguyen Van A", "Fall2024", "Java"));
+        students.add(new Student("S08", "Nguyen Van B", "Spring2024", ".Net"));
+        students.add(new Student("S09", "Nguyen Van B", "Fall2024", "Java"));
+
     }
 
     /**
-     * Creates new students. Loops until the user chooses to stop after
-     * reaching the minimum of 10 students.
+     * Adds a new student to the list.
+     *
+     * @param id student ID
+     * @param name student name
+     * @param semester semester
+     * @param course course name
+     * @throws IllegalArgumentException if the ID already exists
      */
-    public void createStudent() {
-        while (true) {
-            String id = getUniqueId();
-            String name = Validtion.getString("Enter Student Name: ", "Name cannot be empty.");
-            String semester = Validtion.getString("Enter Semester: ", "Semester cannot be empty.");
-            String course = getCourse();
-
-            repository.add(new Student(id, name, semester, course));
-            System.out.println("Student added successfully.");
-
-            if (repository.getTotal() >= MIN_STUDENTS) {
-                if (!Validtion.getYN("Do you want to continue (Y/N)? ")) {
-                    break;
-                }
-            }
-        }
+    public void addStudent(String id, String name, String semester, String course) {
+        
+        students.add(new Student(id, name, semester, course));
     }
 
     /**
-     * Searches students by name (partial match) and displays results
-     * sorted alphabetically by name.
+     * Searches for students by name (case-insensitive, partial match) and
+     * returns the result sorted alphabetically.
+     *
+     * @param name search keyword
+     * @return list of matching students
+     * @throws IllegalArgumentException if no student found
      */
-    public void findAndSort() {
-        String name = Validtion.getString("Enter student name to search: ", "Name cannot be empty.");
-        List<Student> result = repository.findByName(name);
+    public List<Student> findStudentsByName(String name) {
+        List<Student> result = students.stream()
+                .filter(s -> s.getStudentName().toLowerCase().contains(name.toLowerCase()))
+                .sorted(Comparator.comparing(Student::getStudentName, String.CASE_INSENSITIVE_ORDER))
+                .collect(Collectors.toList());
         if (result.isEmpty()) {
-            System.out.println("No student found.");
-            return;
+            throw new IllegalArgumentException("No student found.");
         }
-        List<Student> sortedList = sortByName(result);
-        System.out.println("Student Name | Semester | Course Name");
-        for (Student student : sortedList) {
-            System.out.println(student);
-        }
+        return result;
     }
 
     /**
-     * Finds a student by ID, then offers update or delete options.
-     */
-    public void updateOrDelete() {
-        String id = Validtion.getString("Enter student ID: ", "ID cannot be empty.");
-        Student student = repository.findById(id);
-        if (student == null) {
-            System.out.println("Student not found.");
-            return;
-        }
-        String choice = Validtion.getUD("Do you want to update (U) or delete (D) student? ");
-        if (choice.equals("U")) {
-            String name = Validtion.getString("Enter new Student Name: ", "Name cannot be empty.");
-            String semester = Validtion.getString("Enter new Semester: ", "Semester cannot be empty.");
-            String course = getCourse();
-            student.setStudentName(name);
-            student.setSemester(semester);
-            student.setCourseName(course);
-            repository.update(student);
-            System.out.println("Student updated successfully.");
-        } else {
-            repository.delete(id);
-            System.out.println("Student deleted successfully.");
-        }
-    }
-
-    /**
-     * Displays a report of each student with total enrollments per course.
-     * Groups by student name and course name, then counts occurrences.
-     */
-    public void report() {
-        List<Student> allStudents = repository.getAll();
-        if (allStudents.isEmpty()) {
-            System.out.println("No students in the list.");
-            return;
-        }
-        Map<String, Integer> countMap = new LinkedHashMap<>();
-        for (Student student : allStudents) {
-            String key = student.getStudentName() + " | " + student.getCourseName();
-            countMap.put(key, countMap.getOrDefault(key, 0) + 1);
-        }
-        System.out.println("Student Name | Course | Total");
-        for (Map.Entry<String, Integer> entry : countMap.entrySet()) {
-            System.out.println(entry.getKey() + " | " + entry.getValue());
-        }
-    }
-
-    /**
-     * Prompts for a unique ID, re-prompting if the ID already exists.
+     * Finds a student by ID (case-insensitive).
      *
-     * @return a unique student ID
+     * @param id the student ID
+     * @return the matching student
+     * @throws IllegalArgumentException if not found
      */
-    private String getUniqueId() {
-        while (true) {
-            String id = Validtion.getString("Enter ID: ", "ID cannot be empty.");
-            if (!repository.isIdExist(id)) {
-                return id;
+    public Student findStudentById(String id) {
+        for (Student s : students) {
+            if (s.getId().equalsIgnoreCase(id)) {
+                return s;
             }
-            System.out.println("ID already exists. Please enter a different ID.");
+        }
+        throw new IllegalArgumentException("Student not found.");
+    }
+
+    /**
+     * Updates a student's details by ID. Syncs the new name across all records
+     * of the same person (matching old name) to keep report data consistent.
+     *
+     * @param id student ID
+     * @param name new student name
+     * @param semester new semester
+     * @param course new course name
+     * @throws IllegalArgumentException if the ID does not exist
+     */
+    public void updateStudent(String id, String name, String semester, String course) {     
+        Student targetRecord = findStudentById(id);
+        if (targetRecord == null) {
+            throw new IllegalArgumentException("Student with ID " + id + " not found.");
+        }
+        students.stream()
+                .filter(s -> s.getId().equalsIgnoreCase(id))
+                .forEach(s -> s.setStudentName(name));
+      
+        targetRecord.setSemester(semester);
+        targetRecord.setCourseName(course);
+    }
+
+    /**
+     * Deletes a student by ID.
+     *
+     * @param id the student ID to delete
+     * @throws IllegalArgumentException if the ID does not exist
+     */
+    public void deleteStudent(String id) {
+        if (!students.removeIf(s -> s.getId().equalsIgnoreCase(id))) {
+            throw new IllegalArgumentException("Student not found.");
         }
     }
 
     /**
-     * Prompts for and validates a course name against the allowed list.
+     * Groups students by name and course, then counts total enrollments.
      *
-     * @return a valid course name (Java, .Net, or C/C++)
+     * @return map of "name | course" to total count
      */
-    private String getCourse() {
-        while (true) {
-            String course = Validtion.getString("Enter Course (Java, .Net, C/C++): ", "Course cannot be empty.");
-            for (String validCourse : VALID_COURSES) {
-                if (course.equalsIgnoreCase(validCourse)) {
-                    return validCourse;
-                }
-            }
-            System.out.println("Invalid course. Please enter Java, .Net, or C/C++.");
-        }
+    public Map<String, Long> generateReport() {
+        return students.stream()
+                .collect(Collectors.groupingBy(
+                        s -> s.getStudentName() + " | " + s.getCourseName(),
+                        LinkedHashMap::new,
+                        Collectors.counting()));
     }
 
     /**
-     * Sorts a list of students alphabetically by name.
+     * Checks whether the student list has reached the minimum required count.
      *
-     * @param list the list to sort
-     * @return a new sorted list
+     * @return true if total students >= minimum threshold
      */
-    private List<Student> sortByName(List<Student> list) {
-        List<Student> sortedList = new ArrayList<>(list);
-        Collections.sort(sortedList, new Comparator<Student>() {
-            @Override
-            public int compare(Student s1, Student s2) {
-                return s1.getStudentName().compareToIgnoreCase(s2.getStudentName());
-            }
-        });
-        return sortedList;
+    public boolean hasReachedMinStudents() {
+        return students.size() >= MIN_STUDENTS;
+    }
+
+    /**
+     * Checks whether a given ID already exists in the list.
+     *
+     * @param id the ID to check
+     * @return true if the ID exists, false otherwise
+     */
+    private boolean isIdExist(String id) {
+        return students.stream().anyMatch(s -> s.getId().equalsIgnoreCase(id));
     }
 }

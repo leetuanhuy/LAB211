@@ -1,49 +1,46 @@
 package view;
 
+import controller.StudentController;
 import service.StudentService;
-import utils.Validtion;
+import utils.Validation;
+import static constant.AppConstant.MENU_CREATE;
+import static constant.AppConstant.MENU_FIND_SORT;
+import static constant.AppConstant.MENU_UPDATE_DELETE;
+import static constant.AppConstant.MENU_REPORT;
+import static constant.AppConstant.MENU_EXIT;
 
-/**
- * Main application class for Student Management.
- */
 public class Main {
 
-    /**
-     * Entry point. Displays menu and routes user choices.
-     *
-     * @param args command-line arguments (unused)
-     */
     public static void main(String[] args) {
         StudentService service = new StudentService();
+        StudentController controller = new StudentController(service);
+
         while (true) {
             displayMenu();
-            int choice = Validtion.getInt("Your choice: ",
+            int choice = Validation.getInt("Your choice: ",
                     "Please enter a number between 1 and 5.",
                     "Invalid input. Please enter a valid number.",
-                    1, 5);
+                    MENU_CREATE, MENU_EXIT);
             switch (choice) {
-                case 1:
-                    service.createStudent();
+                case MENU_CREATE:
+                    controller.createStudent();
                     break;
-                case 2:
-                    service.findAndSort();
+                case MENU_FIND_SORT:
+                    controller.findAndSortStudents();
                     break;
-                case 3:
-                    service.updateOrDelete();
+                case MENU_UPDATE_DELETE:
+                    controller.updateOrDeleteStudent();
                     break;
-                case 4:
-                    service.report();
+                case MENU_REPORT:
+                    controller.displayReport();
                     break;
-                case 5:
+                case MENU_EXIT:
                     System.out.println("Exiting program...");
                     return;
             }
         }
     }
 
-    /**
-     * Prints the main menu options to the console.
-     */
     private static void displayMenu() {
         System.out.println("\nWELCOME TO STUDENT MANAGEMENT");
         System.out.println("1. Create");
