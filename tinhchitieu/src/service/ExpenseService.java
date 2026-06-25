@@ -4,7 +4,7 @@
  */
 package service;
 
-import constant.InputConstant;
+
 import java.util.ArrayList;
 import java.util.List;
 import model.Expense;
@@ -16,7 +16,6 @@ import model.Expense;
 public class ExpenseService {
 
     private final ArrayList<Expense> expenses;
-    private int nextId = InputConstant.MIN_EXPENSE_ID;
 
     public ExpenseService() {
         this.expenses = new ArrayList<>();
@@ -42,9 +41,8 @@ public class ExpenseService {
      */
     public boolean add(String date, double amount, String content) {
         try {
-            Expense expense = new Expense(nextId, date, amount, content);
+            Expense expense = new Expense(date, amount, content);
             expenses.add(expense);
-            nextId++;
             return true;
         } catch (Exception e) {
             System.err.println("Add faild");

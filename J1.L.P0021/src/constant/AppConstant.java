@@ -16,5 +16,10 @@ public final class AppConstant {
 
     public static final int MIN_STUDENTS = 10;
     public static final List<String> VALID_COURSES = List.of("Java", ".Net", "C/C++");
+    
+    
+    public static final int FIRST_RECORD_INDEX = 0;
+    public static final int SPLIT_LIMIT = 2;
+    public static final int DISPLAY_PART_INDEX = 1;
 
 }

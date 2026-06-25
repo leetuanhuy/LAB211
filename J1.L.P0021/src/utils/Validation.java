@@ -1,5 +1,6 @@
 package utils;
 
+import static constant.AppConstant.VALID_COURSES;
 import java.util.Scanner;
 
 public final class Validation {
@@ -45,7 +46,7 @@ public final class Validation {
     public static String getString(String msg, String err) {
         while (true) {
             System.out.printf(msg);
-            String input = SC.nextLine();
+            String input = SC.nextLine().trim();
             if (!input.isEmpty()) {
                 return input;
             }
@@ -90,4 +91,7 @@ public final class Validation {
             System.out.println("Please enter U or D.");
         }
     }
+    
+    
+
 }

@@ -67,8 +67,8 @@ public class TaskService {
             throw new Exception("Plan From must be less than Plan To!");
         }
 
-       int id = nextId;
-        Task task = new Task(id, taskTypeId, requirementName,
+        int id = nextId;
+        Task task = new Task(taskTypeId, requirementName,
                 date, planFrom, planTo, assignee, reviewer);
         tasks.add(task);
         nextId++;
@@ -100,5 +100,4 @@ public class TaskService {
         return tasks;
     }
 
-   
 }

@@ -1,11 +1,13 @@
 package controller;
 
+import constant.AppConstant;
+import static constant.AppConstant.VALID_COURSES;
 import java.util.List;
 import java.util.Map;
 import entity.Student;
 import service.StudentService;
 import utils.Validation;
-import static constant.AppConstant.VALID_COURSES;
+import static utils.Validation.getString;
 
 /**
  * Handles console I/O for student management. Delegates business logic to
@@ -20,25 +22,29 @@ public class StudentController {
     }
 
     /**
-     * Creates new students. Loops until the user chooses to stop after reaching
-     * the minimum of 10 students.
+     * Creates new course registrations. Auto-fills student name if ID already
+     * exists. Loops until the user chooses to stop after reaching the minimum
+     * of 10 students.
      */
     public void createStudent() {
         while (true) {
             String id = Validation.getString("Enter ID: ", "ID cannot be empty.");
             String name;
-            Student existingStudent = studentService.findStudentById(id);
-
-            if (existingStudent != null) {
-                name = existingStudent.getStudentName();
+            try {
+                List<Student> existing = studentService.findStudentsById(id);
+                name = existing.get(AppConstant.FIRST_RECORD_INDEX).getStudentName();
                 System.out.println("Student found: " + name + " (Name autofilled to prevent conflict)");
-            } else {
+            } catch (IllegalArgumentException e) {
                 name = Validation.getString("Enter Student Name: ", "Name cannot be empty.");
             }
             String semester = Validation.getString("Enter Semester: ", "Semester cannot be empty.");
             String course = getCourseInput();
-            studentService.addStudent(id, name, semester, course);
-            System.out.println("Student course registration added successfully.");
+            try {
+                studentService.addStudent(id, name, semester, course);
+                System.out.println("Student course registration added successfully.");
+            } catch (IllegalArgumentException e) {
+                System.out.println(e.getMessage());
+            }
             if (studentService.hasReachedMinStudents()) {
                 if (!Validation.confirmYesNo("Do you want to continue (Y/N)? ")) {
                     break;
@@ -65,21 +71,29 @@ public class StudentController {
     }
 
     /**
-     * Finds a student by ID, then offers update or delete options to the user.
+     * Finds all registrations by student ID, displays them as a numbered list,
+     * then lets the user choose a specific record to update or delete.
      */
     public void updateOrDeleteStudent() {
         String id = Validation.getString("Enter student ID: ", "ID cannot be empty.");
         try {
-            Student student = studentService.findStudentById(id);
-            String choice = Validation.getUpdateOrDeleteChoice("Do you want to update (U) or delete (D) student? ");
-            if (choice.equalsIgnoreCase("U")) {
+            List<Student> records = studentService.findStudentsById(id);
+            System.out.println("Index | Student Name | Semester | Course Name");
+            for (int i = 0; i < records.size(); i++) {
+                Student s = records.get(i);
+                System.out.println((i + 1) + ". " + s.getStudentName() + " | " + s.getSemester() + " | " + s.getCourseName());
+            }
+            int choiceIndex = Validation.getInt("Choose index: ", "Invalid index.", "Invalid number.", 1, records.size()) - 1;
+            Student selected = records.get(choiceIndex);
+            String action = Validation.getUpdateOrDeleteChoice("Do you want to update (U) or delete (D) student? ");
+            if (action.equalsIgnoreCase("U")) {
                 String name = Validation.getString("Enter new Student Name: ", "Name cannot be empty.");
                 String semester = Validation.getString("Enter new Semester: ", "Semester cannot be empty.");
                 String course = getCourseInput();
-                studentService.updateStudent(id, name, semester, course);
+                studentService.updateStudent(id, name, semester, course, selected);
                 System.out.println("Student updated successfully.");
             } else {
-                studentService.deleteStudent(id);
+                studentService.deleteStudent(selected);
                 System.out.println("Student deleted successfully.");
             }
         } catch (IllegalArgumentException e) {
@@ -98,19 +112,20 @@ public class StudentController {
         }
         System.out.println("Student Name | Course | Total");
         for (Map.Entry<String, Long> entry : report.entrySet()) {
-            System.out.println(entry.getKey() + " | " + entry.getValue());
+            String displayKey = entry.getKey()
+                    .split("#", AppConstant.SPLIT_LIMIT)[AppConstant.DISPLAY_PART_INDEX];
+            System.out.println(displayKey + " | " + entry.getValue());
         }
     }
 
     /**
-     * Prompts the user to enter a course name and validates it against the
-     * allowed list.
+     * Prompts the user to enter a valid course name from the allowed list.
      *
      * @return a valid course name (Java, .Net, or C/C++)
      */
-    private String getCourseInput() {
+    public static String getCourseInput() {
         while (true) {
-            String course = Validation.getString("Enter Course (Java, .Net, C/C++): ", "Course cannot be empty.");
+            String course = getString("Enter Course (Java, .Net, C/C++): ", "Course cannot be empty.");
             for (String valid : VALID_COURSES) {
                 if (course.equalsIgnoreCase(valid)) {
                     return valid;
@@ -119,4 +134,5 @@ public class StudentController {
             System.out.println("Invalid course. Please enter Java, .Net, or C/C++.");
         }
     }
+
 }

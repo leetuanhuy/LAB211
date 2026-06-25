@@ -11,14 +11,14 @@ import constant.InputConstant;
  * @author Admin
  */
 public class Expense {
-
+    private static int nextId = InputConstant.MIN_EXPENSE_ID;
     private int id;
     private String date;
     private double amount;
     private String content;
 
-    public Expense(int id, String date, double amount, String content) {
-        this.id = id;
+    public Expense(String date, double amount, String content) {
+        this.id = nextId++;
         this.date = date;
         this.amount = amount;
         this.content = content;
