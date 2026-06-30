@@ -37,10 +37,10 @@ public class StudentService {
     /**
      * Adds a new course registration for a student.
      *
-     * @param id student ID
-     * @param name student name
+     * @param id       student ID
+     * @param name     student name
      * @param semester semester
-     * @param course course name
+     * @param course   course name
      * @throws IllegalArgumentException if the combination (id + semester +
      * course) already exists
      */
@@ -96,10 +96,10 @@ public class StudentService {
      * records sharing the original ID to keep data consistent, and allows
      * changing the ID.
      *
-     * @param id new student ID
-     * @param name new student name
-     * @param semester new semester
-     * @param course new course name
+     * @param id           new student ID
+     * @param name         new student name
+     * @param semester     new semester
+     * @param course       new course name
      * @param targetRecord the specific registration record to update
      * @throws IllegalArgumentException if the combination (id + semester +
      * course) already exists in another record
@@ -148,14 +148,26 @@ public class StudentService {
 //                        LinkedHashMap::new,
 //                        Collectors.counting()));
 //    }
+    /**
+     * Generates a student enrollment report by grouping course registrations.
+     *
+     * This method iterates through the student list and groups enrollments
+     * using a composite key format: "ID#StudentName | CourseName". It counts
+     * the total number of semesters/times each unique student has enrolled in a
+     * specific course, preserving the insertion order.
+     *
+     *
+     * @return a {@link Map} where the key is the formatted string "ID#Name |
+     * Course" and the value is the total enrollment count ({@link Long})
+     */
     public Map<String, Long> generateReport() {
         // 1. Tạo một cái Map rỗng để chứa kết quả báo cáo
         Map<String, Long> reportMap = new LinkedHashMap<>();
 
         // 2. Dùng vòng lặp duyệt qua từng sinh viên một trong danh sách 'students'
-        for (Student s : students) {
+        for (Student su : students) {
             // Tạo cái nhãn Key giống hệt như cách làm của Stream: "ID#Tên | Môn"
-            String key = s.getId() + "#" + s.getStudentName() + " | " + s.getCourseName();
+            String key = su.getId() + "#" + su.getStudentName() + " | " + su.getCourseName();
 
             // 3. Kiểm tra xem cái nhãn Key này đã từng xuất hiện trong bản báo cáo chưa
             if (reportMap.containsKey(key)) {
