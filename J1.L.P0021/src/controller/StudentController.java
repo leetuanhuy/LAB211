@@ -46,7 +46,7 @@ public class StudentController {
                 System.out.println(e.getMessage());
             }
             if (studentService.hasReachedMinStudents()) {
-                if (!Validation.confirmYesNo("Do you want to continue (Y/N)? ")) {
+                if (!Validation.confirmYesNo("Do you want to continue (Y/N)? ","","")) {
                     break;
                 }
             }
@@ -85,7 +85,8 @@ public class StudentController {
             }
             int choiceIndex = Validation.getInt("Choose index: ", "Invalid index.", "Invalid number.", 1, records.size()) - 1;
             Student selected = records.get(choiceIndex);
-            String action = Validation.getUpdateOrDeleteChoice("Do you want to update (U) or delete (D) student? ");
+            String action = Validation.getUpdateOrDeleteChoice("Do you want to update (U) or delete (D) student? "
+                    ,"","");
             if (action.equalsIgnoreCase("U")) {
                 String name = Validation.getString("Enter new Student Name: ", "Name cannot be empty.");
                 String semester = Validation.getString("Enter new Semester: ", "Semester cannot be empty.");

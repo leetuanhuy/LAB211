@@ -2,12 +2,12 @@ package service;
 
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import entity.Student;
 import static constant.AppConstant.MIN_STUDENTS;
+import java.util.LinkedHashMap;
 
 /**
  * Handles business logic for student management. Data is stored in-memory.
@@ -41,13 +41,14 @@ public class StudentService {
      * @param name student name
      * @param semester semester
      * @param course course name
-     * @throws IllegalArgumentException if the combination (id + semester + course) already exists
+     * @throws IllegalArgumentException if the combination (id + semester +
+     * course) already exists
      */
     public void addStudent(String id, String name, String semester, String course) {
         boolean exists = students.stream()
                 .anyMatch(s -> s.getId().equalsIgnoreCase(id)
-                        && s.getSemester().equalsIgnoreCase(semester)
-                        && s.getCourseName().equalsIgnoreCase(course));
+                && s.getSemester().equalsIgnoreCase(semester)
+                && s.getCourseName().equalsIgnoreCase(course));
         if (exists) {
             throw new IllegalArgumentException("This course registration already exists.");
         }
@@ -91,23 +92,24 @@ public class StudentService {
     }
 
     /**
-     * Updates a specific course registration. Syncs the new name across all records
-     * sharing the original ID to keep data consistent, and allows changing the ID.
+     * Updates a specific course registration. Syncs the new name across all
+     * records sharing the original ID to keep data consistent, and allows
+     * changing the ID.
      *
      * @param id new student ID
      * @param name new student name
      * @param semester new semester
      * @param course new course name
      * @param targetRecord the specific registration record to update
-     * @throws IllegalArgumentException if the combination (id + semester + course)
-     *         already exists in another record
+     * @throws IllegalArgumentException if the combination (id + semester +
+     * course) already exists in another record
      */
     public void updateStudent(String id, String name, String semester, String course, Student targetRecord) {
         boolean duplicate = students.stream()
                 .anyMatch(s -> s.getId().equalsIgnoreCase(id)
-                        && s.getSemester().equalsIgnoreCase(semester)
-                        && s.getCourseName().equalsIgnoreCase(course)
-                        && s != targetRecord);
+                && s.getSemester().equalsIgnoreCase(semester)
+                && s.getCourseName().equalsIgnoreCase(course)
+                && s != targetRecord);
         if (duplicate) {
             throw new IllegalArgumentException("This course registration already exists.");
         }
@@ -133,17 +135,41 @@ public class StudentService {
     }
 
     /**
-     * Groups registrations by student (via ID) and course, then counts total enrollments.
-     * Key format: "ID#StudentName | CourseName" to distinguish students with same name.
+     * Groups registrations by student (via ID) and course, then counts total
+     * enrollments. Key format: "ID#StudentName | CourseName" to distinguish
+     * students with same name.
      *
      * @return map of "ID#name | course" to total count
      */
+//    public Map<String, Long> generateReport() {
+//        return students.stream()
+//                .collect(Collectors.groupingBy(
+//                        s -> s.getId() + "#" + s.getStudentName() + " | " + s.getCourseName(),
+//                        LinkedHashMap::new,
+//                        Collectors.counting()));
+//    }
     public Map<String, Long> generateReport() {
-        return students.stream()
-                .collect(Collectors.groupingBy(
-                        s -> s.getId() + "#" + s.getStudentName() + " | " + s.getCourseName(),
-                        LinkedHashMap::new,
-                        Collectors.counting()));
+        // 1. Tạo một cái Map rỗng để chứa kết quả báo cáo
+        Map<String, Long> reportMap = new LinkedHashMap<>();
+
+        // 2. Dùng vòng lặp duyệt qua từng sinh viên một trong danh sách 'students'
+        for (Student s : students) {
+            // Tạo cái nhãn Key giống hệt như cách làm của Stream: "ID#Tên | Môn"
+            String key = s.getId() + "#" + s.getStudentName() + " | " + s.getCourseName();
+
+            // 3. Kiểm tra xem cái nhãn Key này đã từng xuất hiện trong bản báo cáo chưa
+            if (reportMap.containsKey(key)) {
+                // Nếu ĐÃ CÓ RỒI: Lấy số lượng cũ ra, cộng thêm 1, rồi lưu đè lại
+                long currentCount = reportMap.get(key);
+                reportMap.put(key, currentCount + 1);
+            } else {
+                // Nếu CHƯA CÓ (lần đầu tiên gặp người này học môn này): Đặt số lượng là 1
+                reportMap.put(key, 1L);
+            }
+        }
+
+        // 4. Trả về bảng báo cáo đã gom nhóm và đếm xong
+        return reportMap;
     }
 
     /**

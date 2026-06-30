@@ -1,6 +1,6 @@
 package utils;
 
-import static constant.AppConstant.VALID_COURSES;
+
 import java.util.Scanner;
 
 public final class Validation {
@@ -55,43 +55,48 @@ public final class Validation {
     }
 
     /**
-     * Asks Y/N and returns true for Y, false for N.
+     * Prompts the user for a Yes/No (Y/N) confirmation.
      *
-     * @param msg prompt message
-     * @return true if Y, false if N
+     * @param msg           the prompt message displayed to the user
+     * @param errEmpty      the error message displayed when the input is empty
+     * @param invalidChoice the error message displayed when the input is
+     *                      neither 'Y' nor 'N' (case-insensitive)
+     * @return {@code true} if the user enters 'Y' or 'y'; {@code false} if 'N'
+     * or 'n'
      */
-    public static boolean confirmYesNo(String msg) {
+    public static boolean confirmYesNo(String msg, String errEmpty, String invalidChoice) {
         while (true) {
-            String input = getString(msg, "Input cannot be empty.");
+            String input = getString(msg, errEmpty);
             if (input.equalsIgnoreCase("Y")) {
                 return true;
             }
             if (input.equalsIgnoreCase("N")) {
                 return false;
             }
-            System.out.println("Please enter Y or N.");
+            System.out.println(invalidChoice);
         }
     }
 
     /**
-     * Asks U/D and returns the choice.
+     * Prompts the user to choose between Update (U) or Delete (D).
      *
-     * @param msg prompt message
-     * @return "U" or "D"
+     * @param msg           the prompt message displayed to the user
+     * @param errEmpty      the error message displayed when the input is empty
+     * @param invalidChoice the error message displayed when the input is
+     *                      neither 'U' nor 'D' (case-insensitive)
+     * @return "U" if the user chooses update, "D" if the user chooses delete
      */
-    public static String getUpdateOrDeleteChoice(String msg) {
+    public static String getUpdateOrDeleteChoice(String msg, String errEmpty, String invalidChoice) {
         while (true) {
-            String input = getString(msg, "Input cannot be empty.");
+            String input = getString(msg, errEmpty);
             if (input.equalsIgnoreCase("U")) {
                 return "U";
             }
             if (input.equalsIgnoreCase("D")) {
                 return "D";
             }
-            System.out.println("Please enter U or D.");
+            System.out.println(invalidChoice);
         }
     }
-    
-    
 
 }
