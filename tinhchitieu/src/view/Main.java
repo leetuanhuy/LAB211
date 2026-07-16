@@ -5,6 +5,8 @@
 package view;
 
 import constant.InputConstant;
+import controller.ExpenseController;
+import java.util.ArrayList;
 import java.util.List;
 import model.Expense;
 import service.ExpenseService;
@@ -16,9 +18,10 @@ import utils.Validtion;
  */
 public class Main {
 
-    private static ExpenseService service = new ExpenseService();
-
     public static void main(String[] args) {
+        List<Expense> list = new ArrayList<>();
+        ExpenseService service = new ExpenseService(list);
+        ExpenseController controller = new ExpenseController(service);
         System.out.println("======Handy Expense program =====");
         System.out.println("1.Add an expense");
         System.out.println("2.Display all expense");
@@ -31,68 +34,14 @@ public class Main {
                     InputConstant.MIN_CHOICE, InputConstant.MAX_CHOICE);
             switch (choice) {
                 case 1 ->
-                    addExpense();
+                    controller.addExpense();
                 case 2 ->
-                    displayAllExpenses();
+                    controller.displayAllExpenses();
                 case 3 ->
-                    deleteExpense();
+                    controller.deleteExpense();
                 case 4 ->
                     System.exit(0);
             }
-        }
-    }
-
-    public static void addExpense() {
-        System.out.println("-----Add an expense-----");
-        String date = Validtion.getDate("Enter date: ",
-                "Do not empty",
-                "Enter correct format(example: 11-Apr-2004)",
-                "Incorrect date format");
-
-        double amount = Validtion.getDouble("Enter Amount: ",
-                "Amount must be >= 0", "Input must be number",
-                InputConstant.MIN_AMOUNT, InputConstant.MAX_AMOUNT);
-
-        String content = Validtion.getString("Enter content: ",
-                "Do not empty");
-        if (service.add(date, amount, content)) {
-            System.out.println("Success!");
-        } else {
-
-            System.out.println("Add faild");
-        }
-
-    }
-
-    public static void displayAllExpenses() {
-        System.out.println("-----Display all exnpense-------");
-        List<Expense> list = service.getAll();
-        if (list.isEmpty()) {
-            System.out.println("No expense");
-            return;
-        }
-        System.out.printf("%-5s %-15s %-20s %s%n", "ID", "Date", "Amount of money", "Content");
-        for (Expense exp : list) {
-            System.out.println(exp);
-        }
-        String total = Validtion.formatNumberr(service.getTotalAmount());
-        System.out.printf("%-5s %-15s %-20s%n", "", "Total:", total);
-    }
-
-    public static void deleteExpense() {
-        System.out.println("--- Delete an expense ---");
-        if (service.getExpenseCount() == InputConstant.EMPTY_EXPENSE_COUNT) {
-            System.out.println("No expense");
-            return;
-        }
-        int enxpeseId = Validtion.getInt("Enter ID: ",
-                "Invalid ID",
-                "Enter integer number",
-                InputConstant.MIN_EXPENSE_ID, InputConstant.MAX_EXPENSE_ID);
-        if (service.delete(enxpeseId)) {
-            System.out.println("delete success");
-        } else {
-            System.out.println("delete faild");
         }
     }
 

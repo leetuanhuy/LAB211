@@ -8,11 +8,15 @@ import static constant.AppConstant.MENU_FIND_SORT;
 import static constant.AppConstant.MENU_UPDATE_DELETE;
 import static constant.AppConstant.MENU_REPORT;
 import static constant.AppConstant.MENU_EXIT;
+import entity.Student;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Main {
 
     public static void main(String[] args) {
-        StudentService service = new StudentService();
+        List<Student> list = new ArrayList();
+        StudentService service = new StudentService(list);
         StudentController controller = new StudentController(service);
 
         while (true) {

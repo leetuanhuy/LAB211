@@ -5,6 +5,7 @@
 package utils;
 
 import constant.InputConstant;
+import java.io.InputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Scanner;
@@ -15,7 +16,16 @@ import java.util.Scanner;
  */
 public class Validtion {
 
-    private static final Scanner sc = new Scanner(System.in);
+    private static Scanner sc = new Scanner(System.in);
+
+    /**
+     * Replaces the input source for the scanner. Intended for testing.
+     *
+     * @param in the new input stream to read from
+     */
+    public static void setInput(InputStream in) {
+        sc = new Scanner(in);
+    }
 
     /**
      * Get integer input from user with validation

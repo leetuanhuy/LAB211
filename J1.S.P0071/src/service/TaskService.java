@@ -12,13 +12,13 @@ import java.util.List;
 public class TaskService {
 
     private List<Task> tasks;
-    private int nextId = TaskConstants.MIN_TASK_ID;
+   
 
     /**
      * Constructs a TaskService with an empty task list.
      */
-    public TaskService() {
-        tasks = new ArrayList<>();
+    public TaskService(List<Task> tasks) {
+        tasks = tasks ;
     }
 
     /**
@@ -67,12 +67,12 @@ public class TaskService {
             throw new Exception("Plan From must be less than Plan To!");
         }
 
-        int id = nextId;
+       
         Task task = new Task(taskTypeId, requirementName,
                 date, planFrom, planTo, assignee, reviewer);
         tasks.add(task);
-        nextId++;
-        return id;
+        
+        return task.getId();
     }
 
     /**

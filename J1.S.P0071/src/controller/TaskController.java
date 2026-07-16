@@ -8,24 +8,24 @@ import java.util.List;
 
 /**
  * Controller layer that coordinates between the view and service layers.
- * Handles user input, displays output, and manages exceptions
- * for the task management operations.
+ * Handles user input, displays output, and manages exceptions for the task
+ * management operations.
  */
 public class TaskController {
+
     private TaskService service;
 
     /**
      * Constructs a TaskController with a new TaskService.
      */
-    public TaskController() {
-        service = new TaskService();
+    public TaskController(TaskService service) {
+        this.service = service;
     }
 
     /**
-     * Handles the Add Task operation.
-     * Prompts user for all task details, validates input,
-     * and calls the service to add the task.
-     * Displays success or error messages appropriately.
+     * Handles the Add Task operation. Prompts user for all task details,
+     * validates input, and calls the service to add the task. Displays success
+     * or error messages appropriately.
      */
     public void addTask() {
         try {
@@ -40,42 +40,44 @@ public class TaskController {
 
             int taskTypeID = Validation.getInt(
                     "Enter Task Type ID (" + TaskConstants.MIN_TASK_TYPE_ID + "-"
-                            + TaskConstants.MAX_TASK_TYPE_ID + "): ",
+                    + TaskConstants.MAX_TASK_TYPE_ID + "): ",
                     "Task Type ID must be between " + TaskConstants.MIN_TASK_TYPE_ID
-                            + " and " + TaskConstants.MAX_TASK_TYPE_ID + "!",
+                    + " and " + TaskConstants.MAX_TASK_TYPE_ID + "!",
                     "Invalid input! Please enter a number.",
-                    TaskConstants.MIN_TASK_TYPE_ID, TaskConstants.MAX_TASK_TYPE_ID);
+                    TaskConstants.MIN_TASK_TYPE_ID,
+                    TaskConstants.MAX_TASK_TYPE_ID);
 
-            String requirementName = Validation.getString("Enter Requirement Name: ",
-                                                         "Requirement Name cannot be empty!");
+            String requirementName = Validation.getString(
+                    "Enter Requirement Name: ",
+                    "Requirement Name cannot be empty!");
 
             String date = Validation.getDate("Enter Date (dd-MM-yyyy): ");
 
             double planFrom = Validation.getDouble(
                     "Enter Plan From (" + TaskConstants.MIN_WORK_TIME + "-"
-                            + TaskConstants.MAX_WORK_TIME + "): ",
+                    + TaskConstants.MAX_WORK_TIME + "): ",
                     "Time must be between " + TaskConstants.MIN_WORK_TIME
-                            + " and " + TaskConstants.MAX_WORK_TIME + "!",
+                    + " and " + TaskConstants.MAX_WORK_TIME + "!",
                     "Invalid input! Please enter a number.",
                     TaskConstants.MIN_WORK_TIME, TaskConstants.MAX_WORK_TIME);
 
             double planTo = Validation.getDouble(
                     "Enter Plan To (" + TaskConstants.MIN_WORK_TIME + "-"
-                            + TaskConstants.MAX_WORK_TIME + "): ",
+                    + TaskConstants.MAX_WORK_TIME + "): ",
                     "Time must be between " + TaskConstants.MIN_WORK_TIME
-                            + " and " + TaskConstants.MAX_WORK_TIME + "!",
+                    + " and " + TaskConstants.MAX_WORK_TIME + "!",
                     "Invalid input! Please enter a number.",
                     TaskConstants.MIN_WORK_TIME, TaskConstants.MAX_WORK_TIME);
 
             String assignee = Validation.getString("Enter Assignee: ",
-                                                  "Assignee cannot be empty!");
+                    "Assignee cannot be empty!");
 
             String reviewer = Validation.getString("Enter Reviewer: ",
-                                                  "Reviewer cannot be empty!");
+                    "Reviewer cannot be empty!");
 
             int taskId = service.addTask(requirementName, assignee, reviewer,
-                                       taskTypeID, date,
-                                       planFrom, planTo);
+                    taskTypeID, date,
+                    planFrom, planTo);
 
             System.out.println("\nSuccess! Task added with ID: " + taskId);
 
@@ -87,21 +89,21 @@ public class TaskController {
     }
 
     /**
-     * Handles the Delete Task operation.
-     * Prompts user for a task ID, validates it exists,
-     * and calls the service to delete the task.
+     * Handles the Delete Task operation. Prompts user for a task ID, validates
+     * it exists, and calls the service to delete the task.
      */
     public void deleteTask() {
         try {
             System.out.println("\n---------- Delete Task ----------");
 
             int taskId = Validation.getInt("Enter Task ID to delete: ",
-                                          "Invalid ID! Please enter a valid number.",
-                                          "Invalid input! Please enter a number.",
-                                          1, Integer.MAX_VALUE);
+                    "Invalid ID! Please enter a valid number.",
+                    "Invalid input! Please enter a number.",
+                    1, Integer.MAX_VALUE);
 
             service.deleteTask(taskId);
-            System.out.println("\nSuccess! Task ID " + taskId + " has been deleted.");
+            System.out.println(
+                    "\nSuccess! Task ID " + taskId + " has been deleted.");
 
         } catch (NumberFormatException ex) {
             System.err.println("NumberFormatException: " + ex.getMessage());
@@ -111,9 +113,8 @@ public class TaskController {
     }
 
     /**
-     * Handles the Display Tasks operation.
-     * Retrieves all tasks from the service and displays them
-     * in a formatted table sorted by ID in ascending order.
+     * Handles the Display Tasks operation. Retrieves all tasks from the service
+     * and displays them in a formatted table sorted by ID in ascending order.
      */
     public void displayTasks() {
         System.out.println("\n---------- All Tasks ----------");
@@ -123,12 +124,16 @@ public class TaskController {
         if (tasks.isEmpty()) {
             System.out.println("No tasks found!");
         } else {
-            System.out.println(String.format("%-5s %-20s %-10s %-12s %-10s %-10s %-15s %-15s",
-                    "ID", "Name", "Type", "Date", "From", "To", "Assignee", "Reviewer"));
-            System.out.println("--------------------------------------------------------------------------");
+            System.out.println(String.format(
+                    "%-5s %-20s %-10s %-12s %-10s %-10s %-15s %-15s",
+                    "ID", "Name", "Type", "Date", "From", "To", "Assignee",
+                    "Reviewer"));
+            System.out.println(
+                    "--------------------------------------------------------------------------");
 
             for (Task task : tasks) {
-                System.out.println(String.format("%-5d %-20s %-10s %-12s %-10.1f %-10.1f %-15s %-15s",
+                System.out.println(String.format(
+                        "%-5d %-20s %-10s %-12s %-10.1f %-10.1f %-15s %-15s",
                         task.getId(),
                         task.getRequirementName(),
                         task.getTaskTypeName(),

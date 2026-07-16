@@ -12,17 +12,20 @@ import java.util.Comparator;
 import java.util.List;
 
 /**
- * Service class managing worker operations: add, adjust salary, and retrieve history.
+ * Service class managing worker operations: add, adjust salary, and retrieve
+ * history.
  */
 public class WorkerService {
 
     private final List<Worker> workers;
     private final List<SalaryHistory> salaryHistories;
-    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern(
+            "dd/MM/yyyy");
 
-    public WorkerService() {
-        this.workers = new ArrayList<>();
-        this.salaryHistories = new ArrayList<>();
+    public WorkerService(List<Worker> workers,
+            List<SalaryHistory> salaryHistories) {
+        this.workers = workers;
+        this.salaryHistories = salaryHistories;
     }
 
     /**
@@ -30,24 +33,28 @@ public class WorkerService {
      *
      * @param worker the worker to add
      * @return {@code true} if the worker was added successfully
-     * @throws Exception if the worker id is null, empty, or already exists,
-     *                   age is out of range, or salary is invalid
+     * @throws Exception if the worker id is null, empty, or already exists, age
+     * is out of range, or salary is invalid
      */
     public boolean addWorker(Worker worker) throws Exception {
         if (worker.getId() == null || worker.getId().trim().isEmpty()) {
             throw new Exception("Worker ID cannot be null or empty.");
         }
 
-        boolean idExists = workers.stream().anyMatch(w -> w.getId().equalsIgnoreCase(worker.getId()));
+        boolean idExists = workers.stream().anyMatch(
+                w -> w.getId().equalsIgnoreCase(worker.getId()));
         if (idExists) {
-            throw new Exception("Worker ID [" + worker.getId() + "] already exists.");
+            throw new Exception(
+                    "Worker ID [" + worker.getId() + "] already exists.");
         }
 
         if (worker.getAge() < WorkerConstants.MIN_AGE || worker.getAge() > WorkerConstants.MAX_AGE) {
-            throw new Exception("Age must be between " + WorkerConstants.MIN_AGE + " and " + WorkerConstants.MAX_AGE + ".");
+            throw new Exception(
+                    "Age must be between " + WorkerConstants.MIN_AGE + " and " + WorkerConstants.MAX_AGE + ".");
         }
         if (worker.getSalary() <= WorkerConstants.MIN_SALARY) {
-            throw new Exception("Salary must be greater than " + WorkerConstants.MIN_SALARY + ".");
+            throw new Exception(
+                    "Salary must be greater than " + WorkerConstants.MIN_SALARY + ".");
         }
         return workers.add(worker);
     }
@@ -59,24 +66,27 @@ public class WorkerService {
      * @param code   the worker's code
      * @param amount the amount to adjust
      * @return {@code true} if the salary was adjusted successfully
-     * @throws Exception if the worker is not found, amount is invalid,
-     *                   or the new salary would be invalid
+     * @throws Exception if the worker is not found, amount is invalid, or the
+     * new salary would be invalid
      */
     public boolean changeSalary(SalaryStatus status, String code, double amount) throws Exception {
         if (amount <= WorkerConstants.MIN_ADJUSTMENT_AMOUNT) {
-            throw new Exception("Amount must be greater than " + WorkerConstants.MIN_ADJUSTMENT_AMOUNT + ".");
+            throw new Exception(
+                    "Amount must be greater than " + WorkerConstants.MIN_ADJUSTMENT_AMOUNT + ".");
         }
 
         Worker worker = findWorkerByCode(code);
         if (worker == null) {
-            throw new Exception("Worker with code [" + code + "] does not exist.");
+            throw new Exception(
+                    "Worker with code [" + code + "] does not exist.");
         }
 
         double oldSalary = worker.getSalary();
         double newSalary = (status == SalaryStatus.UP) ? oldSalary + amount : oldSalary - amount;
 
         if (newSalary <= WorkerConstants.MIN_SALARY) {
-            throw new Exception("Action failed. New salary cannot be lower than or equal to " + WorkerConstants.MIN_SALARY + ".");
+            throw new Exception(
+                    "Action failed. New salary cannot be lower than or equal to " + WorkerConstants.MIN_SALARY + ".");
         }
 
         worker.setSalary(newSalary);

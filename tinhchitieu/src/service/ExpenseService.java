@@ -4,7 +4,6 @@
  */
 package service;
 
-
 import java.util.ArrayList;
 import java.util.List;
 import model.Expense;
@@ -15,10 +14,10 @@ import model.Expense;
  */
 public class ExpenseService {
 
-    private final ArrayList<Expense> expenses;
+    private final List<Expense> expenses;
 
-    public ExpenseService() {
-        this.expenses = new ArrayList<>();
+    public ExpenseService(List<Expense> expenses) {
+        this.expenses = expenses;
     }
 
     /**
@@ -34,8 +33,8 @@ public class ExpenseService {
     /**
      * Add expense to list. ID auto increment, not reuse after delete.
      *
-     * @param date date of expense
-     * @param amount amount of money
+     * @param date    date of expense
+     * @param amount  amount of money
      * @param content content/description
      * @return true if add success, false if false
      */

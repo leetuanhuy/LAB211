@@ -16,8 +16,8 @@ public class StudentService {
 
     private final List<Student> students;
 
-    public StudentService() {
-        this.students = new ArrayList<>();
+    public StudentService(List<Student> students) {
+        this.students =  students;
         initSampleData();
     }
 

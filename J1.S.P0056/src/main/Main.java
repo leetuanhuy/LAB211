@@ -2,15 +2,18 @@ package main;
 
 import constant.WorkerConstants;
 import controller.WorkerController;
+import entity.SalaryHistory;
 import enums.SalaryStatus;
+import entity.Worker;
+import service.WorkerService;
 import utils.Validation;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Main entry point for the Worker Management program (J1.S.P0056).
  */
 public class Main {
-
-    private static final WorkerController controller = new WorkerController();
 
     /**
      * Starts the worker management application.
@@ -18,13 +21,10 @@ public class Main {
      * @param args the command line arguments (not used)
      */
     public static void main(String[] args) {
-        run();
-    }
-
-    /**
-     * Displays the main menu and handles user option selection.
-     */
-    public static void run() {
+        List<Worker> workerList = new ArrayList<>();
+        List<SalaryHistory> salaryHistoryList = new ArrayList<>();
+        WorkerService service = new WorkerService(workerList, salaryHistoryList);
+        WorkerController controller = new WorkerController(service);
         while (true) {
             displayMenu();
             int option = Validation.getInt(
@@ -60,6 +60,9 @@ public class Main {
         }
     }
 
+    /**
+     * Displays the main menu and handles user option selection.
+     */
     /**
      * Prints the main menu options.
      */

@@ -1,12 +1,15 @@
 package view;
 
 import controller.TaskController;
+import entity.Task;
+import java.util.ArrayList;
+import java.util.List;
+import service.TaskService;
 import utils.Validation;
 
 /**
- * Entry point of the Task Management Program (CCRM).
- * Displays the main menu and handles user navigation
- * through the 4 program options.
+ * Entry point of the Task Management Program (CCRM). Displays the main menu and
+ * handles user navigation through the 4 program options.
  */
 public class Main {
 
@@ -25,7 +28,9 @@ public class Main {
     }
 
     public static void main(String[] args) {
-        TaskController controller = new TaskController();
+        List<Task> list = new ArrayList<>();
+        TaskService service = new TaskService(list);
+        TaskController controller = new TaskController(service);
 
         System.out.println("========================================");
         System.out.println("   Task Management Program (CCRM)");
@@ -36,14 +41,18 @@ public class Main {
                 int choice = displayMenu();
 
                 switch (choice) {
-                    case 1 -> controller.addTask();
-                    case 2 -> controller.deleteTask();
-                    case 3 -> controller.displayTasks();
+                    case 1 ->
+                        controller.addTask();
+                    case 2 ->
+                        controller.deleteTask();
+                    case 3 ->
+                        controller.displayTasks();
                     case 4 -> {
                         System.out.println("\nThank you! Goodbye!");
                         return;
                     }
-                    default -> System.out.println("Invalid option!");
+                    default ->
+                        System.out.println("Invalid option!");
                 }
             } catch (NullPointerException ex) {
                 System.err.println("NullPointerException: " + ex.getMessage());

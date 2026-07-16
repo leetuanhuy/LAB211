@@ -16,8 +16,8 @@ public class WorkerController {
 
     private final WorkerService workerService;
 
-    public WorkerController() {
-        this.workerService = new WorkerService();
+    public WorkerController(WorkerService workerService) {
+        this.workerService = workerService;
     }
 
     /**
