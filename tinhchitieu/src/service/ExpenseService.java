@@ -4,7 +4,6 @@
  */
 package service;
 
-import java.util.ArrayList;
 import java.util.List;
 import model.Expense;
 
@@ -33,21 +32,12 @@ public class ExpenseService {
     /**
      * Add expense to list. ID auto increment, not reuse after delete.
      *
-     * @param date    date of expense
-     * @param amount  amount of money
-     * @param content content/description
+     * @param expense
      * @return true if add success, false if false
+     *
      */
-    public boolean add(String date, double amount, String content) {
-        try {
-            Expense expense = new Expense(date, amount, content);
-            expenses.add(expense);
-            return true;
-        } catch (Exception e) {
-            System.err.println("Add faild");
-            return false;
-        }
-
+    public boolean add(Expense expense) {
+        return expenses.add(expense);
     }
 
     /**
@@ -77,15 +67,6 @@ public class ExpenseService {
             }
         }
         return false;
-    }
-
-    /**
-     * Get number of expense
-     *
-     * @return size of expense list
-     */
-    public int getExpenseCount() {
-        return expenses.size();
     }
 
 }

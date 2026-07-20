@@ -22,64 +22,24 @@ public class WorkerController {
 
     /**
      * Prompts user for worker information and adds a new worker.
+     * @param worker
+     * @return 
+     * @throws java.lang.Exception
      */
-    public void addWorker() {
-        System.out.println("\n--- Add Worker ---");
-        String id = Validation.getString("Enter ID: ", "ID cannot be empty.");
-        String name = Validation.getString("Enter Name: ", "Name cannot be empty.");
-        int age = Validation.getInt(
-                "Enter Age: ",
-                "Age must be between " + WorkerConstants.MIN_AGE + " and " + WorkerConstants.MAX_AGE + ".",
-                "Invalid age format.",
-                WorkerConstants.MIN_AGE,
-                WorkerConstants.MAX_AGE
-        );
-        double salary = Validation.getDouble(
-                "Enter Salary: ",
-                "Salary must be greater than " + WorkerConstants.MIN_SALARY + ".",
-                "Invalid salary format.",
-                WorkerConstants.MIN_SALARY,
-                Double.MAX_VALUE
-        );
-        String workLocation = Validation.getString("Enter Work Location: "
-                , "Work location cannot be empty.");
-
-        Worker worker = new Worker(id, name, age, salary, workLocation);
-        try {
-            if (workerService.addWorker(worker)) {
-                System.out.println("Worker added successfully.");
-            }
-        } catch (Exception e) {
-            System.err.println("Error: " + e.getMessage());
-        }
+    public boolean addWorker(Worker worker) throws Exception{
+       return workerService.addWorker(worker);
     }
 
     /**
      * Prompts user for worker code and adjustment amount, then adjusts salary.
      *
      * @param status UP for increase, DOWN for decrease
+     * @param code
+     * @param amount
+     * @throws java.lang.Exception
      */
-    public void changeSalary(SalaryStatus status) {
-        String label = status == SalaryStatus.UP ? "Increase" : "Decrease";
-        System.out.println("------- Up/Down Salary --------");
-        String code = Validation.getString("Enter Worker ID: "
-                , "ID cannot be empty.");
-        double amount = Validation.getDouble(
-                "Enter Amount: ",
-                "Amount must be greater than "
-                + WorkerConstants.MIN_ADJUSTMENT_AMOUNT + ".",
-                "Invalid amount format.",
-                WorkerConstants.MIN_ADJUSTMENT_AMOUNT,
-                Double.MAX_VALUE
-        );
-
-        try {
-            if (workerService.changeSalary(status, code, amount)) {
-                System.out.println("Salary " + label.toLowerCase() + "d successfully.");
-            }
-        } catch (Exception e) {
-            System.err.println("Error: " + e.getMessage());
-        }
+    public void changeSalary(SalaryStatus status, String code, double amount) throws Exception{
+        return workerService.changeSalary(status, code, amount);
     }
 
     /**

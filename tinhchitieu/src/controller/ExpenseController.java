@@ -1,12 +1,12 @@
 package controller;
 
-import constant.InputConstant;
+
 import java.util.List;
 import model.Expense;
 import service.ExpenseService;
-import utils.Validtion;
 
 public class ExpenseController {
+
     private final ExpenseService service;
 
     public ExpenseController(ExpenseService service) {
@@ -14,62 +14,44 @@ public class ExpenseController {
     }
 
     /**
-     * Prompts user for date, amount, and content via console input,
-     * then delegates to the service layer to add the expense.
+     * Add expense to list
+     *
+     * @param date    date of expense
+     * @param amount  amount of money
+     * @param content content/description
+     * @return
+     *
      */
-    public void addExpense() {
-        String date = Validtion.getDate(
-                "Enter Date: ",
-                "Date cannot be empty",
-                "Date format is wrong (dd-MMM-yyyy)",
-                "Date is invalid");
-        double amount = Validtion.getDouble(
-                "Enter Amount: ",
-                "Amount must be greater than 0",
-                "Amount must be a number",
-                InputConstant.MIN_AMOUNT,
-                InputConstant.MAX_AMOUNT);
-        String content = Validtion.getString(
-                "Enter Content: ",
-                "Content cannot be empty");
-        if (service.add(date, amount, content)) {
-            System.out.println("Expense added successfully");
-        }
+    public boolean addExpense(String date, double amount, String content) {
+        Expense expense = new Expense(date, amount, content);
+        return service.add(expense);
     }
 
     /**
-     * Displays all expenses in a formatted table. Prints a message if the
-     * list is empty, otherwise prints each expense and the total amount.
+     * Displays all expenses in a formatted table. Prints a message if the list
+     * is empty, otherwise prints each expense and the total amount.
+     *
+     * @return
      */
-    public void displayAllExpenses() {
-        List<Expense> expenses = service.getAll();
-        if (expenses.isEmpty()) {
-            System.out.println("No expenses found");
-            return;
-        }
-        System.out.println("---------Display All Expenses-----------");
-        System.out.printf("%-5s %-15s %-20s %s%n", "ID", "Date", "Amount", "Content");
-        for (Expense exp : expenses) {
-            System.out.println(exp);
-        }
-        System.out.println("Total: " + Validtion.formatNumberr(service.getTotalAmount()));
+    public List<Expense> displayAllExpenses() {
+        return service.getAll();
     }
 
     /**
-     * Prompts user for an expense ID via console input, then delegates to
-     * the service layer to delete the expense. Prints success or failure.
+     *
+     * @return
      */
-    public void deleteExpense() {
-        int id = Validtion.getInt(
-                "Enter ID: ",
-                "ID not found",
-                "ID must be an integer",
-                InputConstant.MIN_EXPENSE_ID,
-                InputConstant.MAX_EXPENSE_ID);
-        if (service.delete(id)) {
-            System.out.println("Expense deleted successfully");
-        } else {
-            System.out.println("Delete failed. Expense not found.");
-        }
+    public double getTotalAmount() {
+        return service.getTotalAmount();
+    }
+
+    /**
+     * 
+     * Service layer to delete the expense. 
+     * @param id
+     * @return 
+     */
+    public boolean deleteExpense(int id) {
+        return service.delete(id);
     }
 }

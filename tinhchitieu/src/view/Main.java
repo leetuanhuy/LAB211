@@ -34,15 +34,70 @@ public class Main {
                     InputConstant.MIN_CHOICE, InputConstant.MAX_CHOICE);
             switch (choice) {
                 case 1 ->
-                    controller.addExpense();
+                    addExpense(controller);
                 case 2 ->
-                    controller.displayAllExpenses();
+                   getAllExpense(controller);
                 case 3 ->
-                    controller.deleteExpense();
+                    deleteExpense(controller);
                 case 4 ->
                     System.exit(0);
             }
         }
+    }
+
+    public static void addExpense(ExpenseController controller) {
+
+        String date = Validtion.getDate(
+                "Enter Date: ",
+                "Date cannot be empty",
+                "Date format is wrong (dd-MMM-yyyy)",
+                "Date is invalid");
+        double amount = Validtion.getDouble(
+                "Enter Amount: ",
+                "Amount must be greater than 0",
+                "Amount must be a number",
+                InputConstant.MIN_AMOUNT,
+                InputConstant.MAX_AMOUNT);
+        String content = Validtion.getString(
+                "Enter Content: ",
+                "Content cannot be empty");
+        if (controller.addExpense(date, amount, content)) {
+            System.out.println("Expense added successfully");
+        } else {
+            System.out.println("Expense added failded");
+        }
+
+    }
+    public static void getAllExpense(ExpenseController controller){
+    
+     List<Expense> expenses = controller.displayAllExpenses();
+        if (expenses.isEmpty()) {
+            System.out.println("No expenses found");
+            return;
+        }
+        System.out.println("---------Display All Expenses-----------");
+        System.out.printf("%-5s %-15s %-20s %s%n", "ID", "Date", "Amount",
+                "Content");
+        for (Expense exp : expenses) {
+            System.out.println(exp);
+        }
+        System.out.println("Total: " + Validtion.formatNumberr(
+                controller.getTotalAmount()));
+    }
+    
+    public static void deleteExpense(ExpenseController controller){
+     int id = Validtion.getInt(
+                "Enter ID: ",
+                "ID not found",
+                "ID must be an integer",
+                InputConstant.MIN_EXPENSE_ID,
+                InputConstant.MAX_EXPENSE_ID);
+        if (controller.deleteExpense(id)) {
+            System.out.println("Expense deleted successfully");
+        } else {
+            System.out.println("Delete failed. Expense not found.");
+        }
+    
     }
 
 }

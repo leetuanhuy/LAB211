@@ -11,14 +11,14 @@ import constant.InputConstant;
  * @author Admin
  */
 public class Expense {
-    private static int nextId = InputConstant.MIN_EXPENSE_ID;
-    private int id;
+
+    private static int id = InputConstant.MIN_EXPENSE_ID;
     private String date;
     private double amount;
     private String content;
 
     public Expense(String date, double amount, String content) {
-        this.id = nextId++;
+        Expense.id = id++;
         this.date = date;
         this.amount = amount;
         this.content = content;
@@ -29,7 +29,7 @@ public class Expense {
     }
 
     public void setId(int id) {
-        this.id = id;
+        Expense.id = id;
     }
 
     public String getDate() {
@@ -57,9 +57,7 @@ public class Expense {
     }
 
     @Override
-    public String toString() {
-        String amountStr = (amount % InputConstant.WHOLE_NUMBER_MODULO == InputConstant.WHOLE_NUMBER_REMAINDER)
-                ? String.valueOf((long) amount) : String.valueOf(amount);
-        return String.format("%-5d %-15s %-20s %s", id, date, amountStr, content);
+    public String toString() {      
+        return String.format("%-5d %-15s %-20s %s", id, date, amount, content);
     }
 }
