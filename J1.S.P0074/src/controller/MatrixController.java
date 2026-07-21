@@ -11,7 +11,7 @@ public class MatrixController {
 
     private final MatrixService matrixService;
 
-    /** Constructor injection: service is provided from outside. */
+   
     public MatrixController(MatrixService matrixService) {
         this.matrixService = matrixService;
     }

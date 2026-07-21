@@ -1,11 +1,9 @@
 package controller;
 
-
 import java.util.List;
 import java.util.Map;
 import entity.Student;
 import service.StudentService;
-
 
 /**
  * Handles console I/O for student management. Delegates business logic to
@@ -28,23 +26,15 @@ public class StudentController {
      * @param name     student name
      * @param semester semester
      * @param course   course name
-     * @throws java.lang.Exception
+     * 
      */
     public void create(String id, String name, String semester,
-            String course) throws Exception {
+            String course) throws IllegalArgumentException {
         Student student = new Student(id, name, semester, course);
         studentService.addStudent(student);
 
     }
 
-    /**
-     * Searches for students by name and displays the results sorted
-     * alphabetically.
-     * @throws java.lang.Exception
-     */
-    public void findAndSortStudents() throws Exception {
-     
-    }
 
     /**
      * Finds all registrations by student ID, displays them as a numbered list,
@@ -122,9 +112,4 @@ public class StudentController {
         return studentService.hasReachedMinStudents();
     }
 
-    /**
-     * Prompts the user to enter a valid course name from the allowed list.
-     *
-     * @return a valid course name (Java, .Net, or C/C++)
-     */
 }

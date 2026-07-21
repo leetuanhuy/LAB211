@@ -37,7 +37,7 @@ public class StudentService {
     /**
      * Adds a new course registration for a student.
      *
-     * @param student
+     * @param student student object to add
      * @throws IllegalArgumentException if the combination (id + semester +
      * course) already exists
      */
@@ -98,16 +98,16 @@ public class StudentService {
      * records sharing the original ID to keep data consistent, and allows
      * changing the ID.
      *
-     * @param newStudent
+     * @param updatedStudent student object to update new information
      * @param targetRecord the specific registration record to update
      * @throws IllegalArgumentException if the combination (id + semester +
      * course) already exists in another record
      */
-    public void updateStudent(Student newStudent, Student targetRecord) throws IllegalArgumentException{
+    public void updateStudent(Student updatedStudent, Student targetRecord) throws IllegalArgumentException{
         boolean duplicate = students.stream()
-                .anyMatch(s -> s.getId().equalsIgnoreCase(newStudent.getId())
-                && s.getSemester().equalsIgnoreCase(newStudent.getSemester())
-                && s.getCourseName().equalsIgnoreCase(newStudent.getCourseName())
+                .anyMatch(s -> s.getId().equalsIgnoreCase(updatedStudent.getId())
+                && s.getSemester().equalsIgnoreCase(updatedStudent.getSemester())
+                && s.getCourseName().equalsIgnoreCase(updatedStudent.getCourseName())
                 && s != targetRecord);
         if (duplicate) {
             throw new IllegalArgumentException(
@@ -116,10 +116,10 @@ public class StudentService {
         String currentId = targetRecord.getId();
         students.stream()
                 .filter(s -> s.getId().equalsIgnoreCase(currentId))
-                .forEach(s -> s.setStudentName(newStudent.getStudentName()));
-        targetRecord.setId(newStudent.getId());
-        targetRecord.setSemester(newStudent.getSemester());
-        targetRecord.setCourseName(newStudent.getCourseName());
+                .forEach(s -> s.setStudentName(updatedStudent.getStudentName()));
+        targetRecord.setId(updatedStudent.getId());
+        targetRecord.setSemester(updatedStudent.getSemester());
+        targetRecord.setCourseName(updatedStudent.getCourseName());
     }
 
     /**
