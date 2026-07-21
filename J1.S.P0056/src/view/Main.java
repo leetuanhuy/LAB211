@@ -100,7 +100,8 @@ public class Main {
 
         Worker worker = new Worker(id, name, age, salary, workLocation);
         try {
-            if (controller.addWorker(worker)) {
+            if (controller.addWorker(id, name, age, salary, workLocation)) {
+            } else {
                 System.out.println("Worker added successfully.");
             }
         } catch (Exception e) {

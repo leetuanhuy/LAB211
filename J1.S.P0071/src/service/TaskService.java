@@ -2,7 +2,7 @@ package service;
 
 import constants.TaskConstants;
 import entity.Task;
-import java.util.ArrayList;
+
 import java.util.List;
 
 /**
@@ -11,35 +11,23 @@ import java.util.List;
  */
 public class TaskService {
 
-    private List<Task> tasks;
-   
+    private final List<Task> tasks;
 
-    /**
-     * Constructs a TaskService with an empty task list.
-     */
     public TaskService(List<Task> tasks) {
-        tasks = tasks ;
+        this.tasks = tasks;
     }
 
     /**
      * Adds a new task after validating all business rules.
      *
-     * @param requirementName the name of the requirement
-     * @param assignee the person assigned to the task
-     * @param reviewer the person reviewing the task
-     * @param taskTypeId the task type ID (1-4)
-     * @param date the date in dd-MM-yyyy format
-     * @param planFrom the start time (8.0-17.5, 0.5 increments)
-     * @param planTo the end time (8.0-17.5, 0.5 increments)
+     * @param task
      * @return the generated task ID
      * @throws Exception if validation fails
      */
-    public int addTask(String requirementName, String assignee, String reviewer,
-            int taskTypeId, String date, double planFrom, double planTo)
-            throws Exception {
+    public int addTask(Task task) throws Exception {
 
-        if (taskTypeId < TaskConstants.MIN_TASK_TYPE_ID
-                || taskTypeId > TaskConstants.MAX_TASK_TYPE_ID) {
+        if (task.getTaskTypeID() < TaskConstants.MIN_TASK_TYPE_ID
+                || task.getTaskTypeID() > TaskConstants.MAX_TASK_TYPE_ID) {
             throw new Exception("Task Type ID must be between "
                     + TaskConstants.MIN_TASK_TYPE_ID
                     + " and "
@@ -47,10 +35,10 @@ public class TaskService {
                     + "!");
         }
 
-        if (planFrom < TaskConstants.MIN_WORK_TIME
-                || planFrom > TaskConstants.MAX_WORK_TIME
-                || planTo < TaskConstants.MIN_WORK_TIME
-                || planTo > TaskConstants.MAX_WORK_TIME) {
+        if (task.getPlanFrom() < TaskConstants.MIN_WORK_TIME
+                || task.getPlanFrom() > TaskConstants.MAX_WORK_TIME
+                || task.getPlanTo() < TaskConstants.MIN_WORK_TIME
+                || task.getPlanTo() > TaskConstants.MAX_WORK_TIME) {
             throw new Exception("Time must be between "
                     + TaskConstants.MIN_WORK_TIME
                     + " and "
@@ -58,20 +46,18 @@ public class TaskService {
                     + "!");
         }
 
-        if ((planFrom * 2) % 1 != 0 || (planTo * 2) % 1 != 0) {
-            throw new Exception("Time must be in " + TaskConstants.WORK_TIME_STEP
+        if ((task.getPlanFrom() * 2) % 1 != 0 || (task.getPlanTo() * 2) % 1 != 0) {
+            throw new Exception(
+                    "Time must be in " + TaskConstants.WORK_TIME_STEP
                     + " increments (8.0, 8.5, 9.0, ...)!");
         }
 
-        if (planFrom >= planTo) {
+        if (task.getPlanFrom() >= task.getPlanTo()) {
             throw new Exception("Plan From must be less than Plan To!");
         }
 
-       
-        Task task = new Task(taskTypeId, requirementName,
-                date, planFrom, planTo, assignee, reviewer);
         tasks.add(task);
-        
+
         return task.getId();
     }
 
@@ -82,13 +68,10 @@ public class TaskService {
      * @throws Exception if the task ID does not exist
      */
     public void deleteTask(int taskId) throws Exception {
-        for (Task task : tasks) {
-            if (task.getId() == taskId) {
-                tasks.remove(task);
-                return;
-            }
+        boolean removed = tasks.removeIf(task -> task.getId() == taskId);
+        if (!removed) {
+            throw new Exception("Task ID " + taskId + " does not exist!");
         }
-        throw new Exception("Task ID " + taskId + " does not exist!");
     }
 
     /**

@@ -1,11 +1,9 @@
 package controller;
 
-import constant.WorkerConstants;
 import entity.SalaryHistory;
 import enums.SalaryStatus;
 import entity.Worker;
 import service.WorkerService;
-import utils.Validation;
 
 import java.util.List;
 
@@ -21,41 +19,41 @@ public class WorkerController {
     }
 
     /**
-     * Prompts user for worker information and adds a new worker.
-     * @param worker
-     * @return 
-     * @throws java.lang.Exception
+     * Adds a new worker via service.
+     *
+     * @param id           worker Id
+     * @param name         worker name
+     * @param age          worker age
+     * @param salary       worker salary
+     * @param workLocation worker location
+     * @return true if successful
+     * @throws Exception if validation fails
      */
-    public boolean addWorker(Worker worker) throws Exception{
-       return workerService.addWorker(worker);
+    public boolean addWorker(String id, String name, int age, double salary,
+            String workLocation) throws Exception {
+        Worker worker = new Worker(id, name, age, salary, workLocation);
+        return workerService.addWorker(worker);
     }
 
     /**
-     * Prompts user for worker code and adjustment amount, then adjusts salary.
+     * Adjusts salary via service
      *
      * @param status UP for increase, DOWN for decrease
-     * @param code
-     * @param amount
-     * @throws java.lang.Exception
+     * @param code   worker id
+     * @param amount adjustment amount
+     * @return true if successful
+     * @throws Exception if worker not found or amount invalid
      */
-    public void changeSalary(SalaryStatus status, String code, double amount) throws Exception{
+    public boolean changeSalary(SalaryStatus status, String code, double amount) throws Exception {
         return workerService.changeSalary(status, code, amount);
     }
 
     /**
-     * Displays all salary adjustment history sorted by worker id.
+     * get all salary adjustment history sorted by worker id.
+     *
+     * @return list of salary histories
      */
-    public void showInformationSalary() {
-        System.out.println("--------Display Information Salary--------");
-        List<SalaryHistory> histories = workerService.getInformationSalary();
-        if (histories.isEmpty()) {
-            System.out.println("No salary adjustment records found.");
-            return;
-        }
-        System.out.printf("%-10s%-20s%-10s%-15s%-10s%-15s%n",
-                "ID", "Name", "Age", "Salary", "Status", "Date");
-        for (SalaryHistory h : histories) {
-            System.out.println(h);
-        }
+    public List<SalaryHistory> getInformationSalary() {
+        return workerService.getInformationSalary();
     }
 }

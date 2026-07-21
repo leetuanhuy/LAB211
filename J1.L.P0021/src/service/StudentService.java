@@ -1,6 +1,6 @@
 package service;
 
-import java.util.ArrayList;
+
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -17,7 +17,7 @@ public class StudentService {
     private final List<Student> students;
 
     public StudentService(List<Student> students) {
-        this.students =  students;
+        this.students = students;
         initSampleData();
     }
 
@@ -37,22 +37,20 @@ public class StudentService {
     /**
      * Adds a new course registration for a student.
      *
-     * @param id       student ID
-     * @param name     student name
-     * @param semester semester
-     * @param course   course name
+     * @param student
      * @throws IllegalArgumentException if the combination (id + semester +
      * course) already exists
      */
-    public void addStudent(String id, String name, String semester, String course) {
+    public void addStudent(Student student) throws IllegalArgumentException {
         boolean exists = students.stream()
-                .anyMatch(s -> s.getId().equalsIgnoreCase(id)
-                && s.getSemester().equalsIgnoreCase(semester)
-                && s.getCourseName().equalsIgnoreCase(course));
+                .anyMatch(s -> s.getId().equalsIgnoreCase(student.getId())
+                && s.getSemester().equalsIgnoreCase(student.getSemester())
+                && s.getCourseName().equalsIgnoreCase(student.getCourseName()));
         if (exists) {
-            throw new IllegalArgumentException("This course registration already exists.");
+            throw new IllegalArgumentException(
+                    "This course registration already exists.");
         }
-        students.add(new Student(id, name, semester, course));
+        students.add(student);
     }
 
     /**
@@ -61,12 +59,15 @@ public class StudentService {
      *
      * @param name search keyword
      * @return list of matching students
+     * @throws java.lang.Exception
      * @throws IllegalArgumentException if no student found
      */
-    public List<Student> findStudentsByName(String name) {
+    public List<Student> findStudentsByName(String name) throws Exception {
         List<Student> result = students.stream()
-                .filter(s -> s.getStudentName().toLowerCase().contains(name.toLowerCase()))
-                .sorted(Comparator.comparing(Student::getStudentName, String.CASE_INSENSITIVE_ORDER))
+                .filter(s -> s.getStudentName().toLowerCase().contains(
+                name.toLowerCase()))
+                .sorted(Comparator.comparing(Student::getStudentName,
+                        String.CASE_INSENSITIVE_ORDER))
                 .collect(Collectors.toList());
         if (result.isEmpty()) {
             throw new IllegalArgumentException("No student found.");
@@ -79,9 +80,10 @@ public class StudentService {
      *
      * @param id the student ID
      * @return list of all registrations for that ID
+     * @throws java.lang.Exception
      * @throws IllegalArgumentException if no record found
      */
-    public List<Student> findStudentsById(String id) {
+    public List<Student> findStudentsById(String id) throws Exception {
         List<Student> result = students.stream()
                 .filter(s -> s.getId().equalsIgnoreCase(id))
                 .collect(Collectors.toList());
@@ -96,39 +98,38 @@ public class StudentService {
      * records sharing the original ID to keep data consistent, and allows
      * changing the ID.
      *
-     * @param id           new student ID
-     * @param name         new student name
-     * @param semester     new semester
-     * @param course       new course name
+     * @param newStudent
      * @param targetRecord the specific registration record to update
      * @throws IllegalArgumentException if the combination (id + semester +
      * course) already exists in another record
      */
-    public void updateStudent(String id, String name, String semester, String course, Student targetRecord) {
+    public void updateStudent(Student newStudent, Student targetRecord) throws IllegalArgumentException{
         boolean duplicate = students.stream()
-                .anyMatch(s -> s.getId().equalsIgnoreCase(id)
-                && s.getSemester().equalsIgnoreCase(semester)
-                && s.getCourseName().equalsIgnoreCase(course)
+                .anyMatch(s -> s.getId().equalsIgnoreCase(newStudent.getId())
+                && s.getSemester().equalsIgnoreCase(newStudent.getSemester())
+                && s.getCourseName().equalsIgnoreCase(newStudent.getCourseName())
                 && s != targetRecord);
         if (duplicate) {
-            throw new IllegalArgumentException("This course registration already exists.");
+            throw new IllegalArgumentException(
+                    "This course registration already exists.");
         }
         String currentId = targetRecord.getId();
         students.stream()
                 .filter(s -> s.getId().equalsIgnoreCase(currentId))
-                .forEach(s -> s.setStudentName(name));
-        targetRecord.setId(id);
-        targetRecord.setSemester(semester);
-        targetRecord.setCourseName(course);
+                .forEach(s -> s.setStudentName(newStudent.getStudentName()));
+        targetRecord.setId(newStudent.getId());
+        targetRecord.setSemester(newStudent.getSemester());
+        targetRecord.setCourseName(newStudent.getCourseName());
     }
 
     /**
      * Deletes a specific course registration record.
      *
      * @param targetRecord the registration record to delete
+     * @throws java.lang.Exception
      * @throws IllegalArgumentException if the record does not exist
      */
-    public void deleteStudent(Student targetRecord) {
+    public void deleteStudent(Student targetRecord) throws Exception{
         if (!students.remove(targetRecord)) {
             throw new IllegalArgumentException("Student not found.");
         }

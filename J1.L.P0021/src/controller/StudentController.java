@@ -1,13 +1,11 @@
 package controller;
 
-import constant.AppConstant;
-import static constant.AppConstant.VALID_COURSES;
+
 import java.util.List;
 import java.util.Map;
 import entity.Student;
 import service.StudentService;
-import utils.Validation;
-import static utils.Validation.getString;
+
 
 /**
  * Handles console I/O for student management. Delegates business logic to
@@ -25,98 +23,103 @@ public class StudentController {
      * Creates new course registrations. Auto-fills student name if ID already
      * exists. Loops until the user chooses to stop after reaching the minimum
      * of 10 students.
+     *
+     * @param id       student ID
+     * @param name     student name
+     * @param semester semester
+     * @param course   course name
+     * @throws java.lang.Exception
      */
-    public void createStudent() {
-        while (true) {
-            String id = Validation.getString("Enter ID: ", "ID cannot be empty.");
-            String name;
-            try {
-                List<Student> existing = studentService.findStudentsById(id);
-                name = existing.get(AppConstant.FIRST_RECORD_INDEX).getStudentName();
-                System.out.println("Student found: " + name + " (Name autofilled to prevent conflict)");
-            } catch (IllegalArgumentException e) {
-                name = Validation.getString("Enter Student Name: ", "Name cannot be empty.");
-            }
-            String semester = Validation.getString("Enter Semester: ", "Semester cannot be empty.");
-            String course = getCourseInput();
-            try {
-                studentService.addStudent(id, name, semester, course);
-                System.out.println("Student course registration added successfully.");
-            } catch (IllegalArgumentException e) {
-                System.out.println(e.getMessage());
-            }
-            if (studentService.hasReachedMinStudents()) {
-                if (!Validation.confirmYesNo("Do you want to continue (Y/N)? ","","")) {
-                    break;
-                }
-            }
-        }
+    public void create(String id, String name, String semester,
+            String course) throws Exception {
+        Student student = new Student(id, name, semester, course);
+        studentService.addStudent(student);
+
     }
 
     /**
      * Searches for students by name and displays the results sorted
      * alphabetically.
+     * @throws java.lang.Exception
      */
-    public void findAndSortStudents() {
-        String name = Validation.getString("Enter student name to search: ", "Name cannot be empty.");
-        try {
-            List<Student> result = studentService.findStudentsByName(name);
-            System.out.println("Student Name | Semester | Course Name");
-            for (Student student : result) {
-                System.out.println(student);
-            }
-        } catch (IllegalArgumentException e) {
-            System.out.println(e.getMessage());
-        }
+    public void findAndSortStudents() throws Exception {
+     
     }
 
     /**
      * Finds all registrations by student ID, displays them as a numbered list,
      * then lets the user choose a specific record to update or delete.
+     *
+     * @param id           new student ID
+     * @param name         new student name
+     * @param semester     new semester
+     * @param course       new course name
+     * @param targetRecord the specific registration record to update
+     * @throws java.lang.Exception
      */
-    public void updateOrDeleteStudent() {
-        String id = Validation.getString("Enter student ID: ", "ID cannot be empty.");
-        try {
-            List<Student> records = studentService.findStudentsById(id);
-            System.out.println("Index | Student Name | Semester | Course Name");
-            for (int i = 0; i < records.size(); i++) {
-                Student s = records.get(i);
-                System.out.println((i + 1) + ". " + s.getStudentName() + " | " + s.getSemester() + " | " + s.getCourseName());
-            }
-            int choiceIndex = Validation.getInt("Choose index: ", "Invalid index.", "Invalid number.", 1, records.size()) - 1;
-            Student selected = records.get(choiceIndex);
-            String action = Validation.getUpdateOrDeleteChoice("Do you want to update (U) or delete (D) student? "
-                    ,"","");
-            if (action.equalsIgnoreCase("U")) {
-                String name = Validation.getString("Enter new Student Name: ", "Name cannot be empty.");
-                String semester = Validation.getString("Enter new Semester: ", "Semester cannot be empty.");
-                String course = getCourseInput();
-                studentService.updateStudent(id, name, semester, course, selected);
-                System.out.println("Student updated successfully.");
-            } else {
-                studentService.deleteStudent(selected);
-                System.out.println("Student deleted successfully.");
-            }
-        } catch (IllegalArgumentException e) {
-            System.out.println(e.getMessage());
-        }
+    public void update(String id, String name, String semester,
+            String course, Student targetRecord) throws Exception {
+        Student updateStudent = new Student(id, name, semester, course);
+        studentService.updateStudent(updateStudent, targetRecord);
+
+    }
+
+    /**
+     * Deletes a specific course registration record via service.
+     *
+     * @param targetRecord record to delete
+     * @throws Exception if record not found
+     */
+    public void delete(Student targetRecord) throws Exception {
+
+        studentService.deleteStudent(targetRecord);
+    }
+
+    /**
+     * Generates a student enrollment report via service.
+     *
+     * @return map of formatted keys to total count
+     */
+    public Map<String, Long> generateReport() {
+        return studentService.generateReport();
+
     }
 
     /**
      * Displays a report of each student with total enrollments per course.
      */
-    public void displayReport() {
-        Map<String, Long> report = studentService.generateReport();
-        if (report.isEmpty()) {
-            System.out.println("No students in the list.");
-            return;
-        }
-        System.out.println("Student Name | Course | Total");
-        for (Map.Entry<String, Long> entry : report.entrySet()) {
-            String displayKey = entry.getKey()
-                    .split("#", AppConstant.SPLIT_LIMIT)[AppConstant.DISPLAY_PART_INDEX];
-            System.out.println(displayKey + " | " + entry.getValue());
-        }
+    /**
+     * Finds all course registrations of a student by ID.
+     *
+     * @param id student ID
+     * @return list of matching registrations
+     * @throws Exception if student not found
+     */
+    public List<Student> findStudentsById(String id) throws Exception {
+
+        return studentService.findStudentsById(id);
+    }
+
+    /**
+     * Finds students by name sorted alphabetically.
+     *
+     * @param name student name keyword
+     * @return sorted list of matching students
+     * @throws Exception if no student found
+     */
+    public List<Student> findStudentByName(String name) throws Exception {
+
+        return studentService.findStudentsByName(name);
+    }
+
+    /**
+     * Checks whether minimum required student count is reached.
+     *
+     * @return true if threshold is met
+     */
+    public boolean hasReachedMinStudent() {
+
+        return studentService.hasReachedMinStudents();
     }
 
     /**
@@ -124,16 +127,4 @@ public class StudentController {
      *
      * @return a valid course name (Java, .Net, or C/C++)
      */
-    public static String getCourseInput() {
-        while (true) {
-            String course = getString("Enter Course (Java, .Net, C/C++): ", "Course cannot be empty.");
-            for (String valid : VALID_COURSES) {
-                if (course.equalsIgnoreCase(valid)) {
-                    return valid;
-                }
-            }
-            System.out.println("Invalid course. Please enter Java, .Net, or C/C++.");
-        }
-    }
-
 }
