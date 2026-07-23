@@ -65,7 +65,6 @@ public class Main {
         }
     }
 
-    
     public static void displayMenu() {
         System.out.println("\n======== Worker Management ========");
         System.out.println("1. Add a Worker");
@@ -77,39 +76,36 @@ public class Main {
     }
 
     public static void addWorker(WorkerController controller) {
-        System.out.println("\n--- Add Worker ---");
-        String id = Validation.getString("Enter ID: ", "ID cannot be empty.");
-        String name = Validation.getString("Enter Name: ",
-                "Name cannot be empty.");
-        int age = Validation.getInt(
-                "Enter Age: ",
-                "Age must be between " + WorkerConstants.MIN_AGE + " and " + WorkerConstants.MAX_AGE + ".",
-                "Invalid age format.",
-                WorkerConstants.MIN_AGE,
-                WorkerConstants.MAX_AGE
-        );
-        double salary = Validation.getDouble(
-                "Enter Salary: ",
-                "Salary must be greater than " + WorkerConstants.MIN_SALARY + ".",
-                "Invalid salary format.",
-                WorkerConstants.MIN_SALARY,
-                Double.MAX_VALUE
-        );
-        String workLocation = Validation.getString("Enter Work Location: ",
-                "Work location cannot be empty.");
-
         try {
+            System.out.println("\n--- Add Worker ---");
+            String id = Validation.getString("Enter ID: ", "ID cannot be empty.");
+            String name = Validation.getString("Enter Name: ",
+                    "Name cannot be empty.");
+            int age = Validation.getInt(
+                    "Enter Age: ",
+                    "Age must be between " + WorkerConstants.MIN_AGE + " and " + WorkerConstants.MAX_AGE + ".",
+                    "Invalid age format.",
+                    WorkerConstants.MIN_AGE,
+                    WorkerConstants.MAX_AGE
+            );
+            double salary = Validation.getDouble(
+                    "Enter Salary: ",
+                    "Salary must be greater than " + WorkerConstants.MIN_SALARY + ".",
+                    "Invalid salary format.",
+                    WorkerConstants.MIN_SALARY,
+                    Double.MAX_VALUE
+            );
+            String workLocation = Validation.getString("Enter Work Location: ",
+                    "Work location cannot be empty.");
+
             controller.addWorker(id, name, age, salary, workLocation);
             System.out.println("Worker added successfully.");
-        } catch (InvalidIdException e) {
-            System.err.println("ID Error: " + e.getMessage());
-
-        } catch (AgeOutOfRangeException e) {
-            System.err.println("Age Error: " + e.getMessage());
-
         } catch (DuplicateCodeException e) {
             System.err.println("Code Error: " + e.getMessage());
-
+        } catch (InvalidIdException e) {
+            System.err.println("ID Error: " + e.getMessage());
+        } catch (AgeOutOfRangeException e) {
+            System.err.println("Age Error: " + e.getMessage());
         } catch (InvalidSalaryException e) {
             System.err.println("Salary Error: " + e.getMessage());
         } catch (WorkerException e) {

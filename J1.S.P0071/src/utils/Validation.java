@@ -5,17 +5,17 @@ import java.text.SimpleDateFormat;
 import java.util.Scanner;
 
 /**
- * Utility class providing static methods for validating user input.
- * Supports validation for integers, doubles, strings, and dates
- * with appropriate error handling and retry logic.
+ * Utility class providing static methods for validating user input. Supports
+ * validation for integers, doubles, strings, and dates with appropriate error
+ * handling and retry logic.
  */
 public class Validation {
 
     public static final Scanner sc = new Scanner(System.in);
 
     /**
-     * Prompts user for an integer within a specified range.
-     * Repeats until a valid input is provided.
+     * Prompts user for an integer within a specified range. Repeats until a
+     * valid input is provided.
      *
      * @param msg            the prompt message to display
      * @param msgErrorRange  the error message when input is out of range
@@ -24,9 +24,10 @@ public class Validation {
      * @param max            the maximum allowed value (inclusive)
      * @return a valid integer within the specified range
      */
-    public static int getInt(String msg, String msgErrorRange, String msgWrongFormat, int min, int max) {
+    public static int getInt(String msg, String msgErrorRange,
+            String msgWrongFormat, int min, int max) {
         while (true) {
-            System.out.println(msg);
+            System.out.print(msg);
             try {
                 int n = Integer.parseInt(sc.nextLine());
                 if (min <= n && n <= max) {
@@ -41,8 +42,8 @@ public class Validation {
     }
 
     /**
-     * Prompts user for a double within a specified range.
-     * Repeats until a valid input is provided.
+     * Prompts user for a double within a specified range. Repeats until a valid
+     * input is provided.
      *
      * @param msg            the prompt message to display
      * @param msgErrorRange  the error message when input is out of range
@@ -51,9 +52,10 @@ public class Validation {
      * @param max            the maximum allowed value (inclusive)
      * @return a valid double within the specified range
      */
-    public static double getDouble(String msg, String msgErrorRange, String msgWrongFormat, double min, double max) {
+    public static double getDouble(String msg, String msgErrorRange,
+            String msgWrongFormat, double min, double max) {
         while (true) {
-            System.out.println(msg);
+            System.out.print(msg);
             try {
                 double n = Double.parseDouble(sc.nextLine());
                 if (min <= n && n <= max) {
@@ -68,8 +70,8 @@ public class Validation {
     }
 
     /**
-     * Prompts user for a non-empty string.
-     * Repeats until a valid input is provided.
+     * Prompts user for a non-empty string. Repeats until a valid input is
+     * provided.
      *
      * @param msg the prompt message to display
      * @param err the error message when input is empty
@@ -77,19 +79,19 @@ public class Validation {
      */
     public static String getString(String msg, String err) {
         while (true) {
-            System.out.println(msg);
+            System.out.print(msg);
             String s = sc.nextLine();
             if (!s.isEmpty()) {
                 return s;
             }
-            System.err.println(err);
+            System.out.println(err);
         }
     }
 
     /**
-     * Prompts user for a date in dd-MM-yyyy format.
-     * Validates both the format and the calendar validity of the date.
-     * Repeats until a valid date is provided.
+     * Prompts user for a date in dd-MM-yyyy format. Validates both the format
+     * and the calendar validity of the date. Repeats until a valid date is
+     * provided.
      *
      * @param msg the prompt message to display
      * @return a valid date string in dd-MM-yyyy format
@@ -108,7 +110,8 @@ public class Validation {
             }
 
             if (!input.matches("\\d{2}-\\d{2}-\\d{4}")) {
-                System.err.println("Error: Format must be dd-MM-yyyy (example: 15-04-2009)");
+                System.err.println(
+                        "Error: Format must be dd-MM-yyyy (example: 15-04-2009)");
                 continue;
             }
 
@@ -116,7 +119,7 @@ public class Validation {
                 dateFormat.parse(input);
                 return input;
             } catch (ParseException e) {
-                System.err.println("Error: Invalid date!");
+                System.out.println("Error: Invalid date!");
             }
         }
     }

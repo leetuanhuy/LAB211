@@ -19,6 +19,9 @@ public final class TaskConstants {
     public static final double MIN_WORK_TIME = 8.0;
     public static final double MAX_WORK_TIME = 17.5;
     public static final double WORK_TIME_STEP = 0.5;
-    
+    public static final double ZERO_REMINDER = 0.0;
+    public static final double MODULO_PRECISION = 1.0;
+
     public static final int MIN_TASK_ID = 1;
+
 }

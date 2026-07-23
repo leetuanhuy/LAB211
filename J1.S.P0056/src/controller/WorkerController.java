@@ -35,21 +35,21 @@ public class WorkerController {
      * @return true if successful
      * @throws AgeOutOfRangeException if the age out of range
      * @throws DuplicateCodeException if a worker with ID already exist
-     * @throws InvalidIdException if the ID is null , empty
+     * @throws InvalidIdException     if the ID is null , empty
      * @throws InvalidSalaryException if the salary is lower than or equal
-     * minium salary
+     *                                minium salary
      */
     public boolean addWorker(String id, String name, int age, double salary,
-            String workLocation) throws AgeOutOfRangeException, DuplicateCodeException,
+            String workLocation) throws AgeOutOfRangeException,
+            DuplicateCodeException,
             InvalidSalaryException,
             InvalidIdException, WorkerException {
-        if (id == null || id.trim().isEmpty()) {
-            throw new InvalidIdException("Worker ID cannot be null or empty.");
-        }
-
         if (workerService.isExists(id)) {
             throw new DuplicateCodeException(
                     "Worker ID [" + id + "] already exists.");
+        }
+        if (id == null || id.trim().isEmpty()) {
+            throw new InvalidIdException("Worker ID cannot be null or empty.");
         }
 
         if (age < WorkerConstants.MIN_AGE || age > WorkerConstants.MAX_AGE) {
@@ -79,7 +79,7 @@ public class WorkerController {
         if (amount <= WorkerConstants.MIN_ADJUSTMENT_AMOUNT) {
             throw new InvalidSalaryException(
                     "Amount must be greater than "
-                            + WorkerConstants.MIN_ADJUSTMENT_AMOUNT + ".");
+                    + WorkerConstants.MIN_ADJUSTMENT_AMOUNT + ".");
         }
         Worker worker = workerService.findWorkerByCode(code);
         if (worker == null) {
@@ -92,7 +92,7 @@ public class WorkerController {
         if (calculateSalary <= WorkerConstants.MIN_SALARY) {
             throw new InvalidSalaryException(
                     "Action failed. New salary cannot be lower than or equal to "
-                            + WorkerConstants.MIN_SALARY + ".");
+                    + WorkerConstants.MIN_SALARY + ".");
         }
         return workerService.changeSalary(worker, status, amount);
 

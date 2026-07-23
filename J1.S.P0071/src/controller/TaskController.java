@@ -36,7 +36,7 @@ public class TaskController {
      *                        appropriately.
      * @return generate task ID
      * @throws InvalidTaskTimeException if the task type Id or working time is
-     * valid
+     *                                  valid
      */
     public int addTask(String requirementName, String assignee, String reviewer,
             int taskTypeId, String date, double planFrom, double planTo)
@@ -61,7 +61,10 @@ public class TaskController {
                     + "!");
         }
 
-        if ((planFrom * 2) % 1 != 0 || (planTo * 2) % 1 != 0) {
+        if ((planFrom / TaskConstants.WORK_TIME_STEP) % TaskConstants.MODULO_PRECISION
+                != TaskConstants.ZERO_REMINDER
+                || (planTo / TaskConstants.WORK_TIME_STEP) % TaskConstants.MODULO_PRECISION
+                != TaskConstants.ZERO_REMINDER) {
             throw new InvalidTaskTimeException(
                     "Time must be in " + TaskConstants.WORK_TIME_STEP
                     + " increments (8.0, 8.5, 9.0, ...)!");
