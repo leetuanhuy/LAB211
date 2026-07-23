@@ -18,9 +18,7 @@ public class StudentController {
     }
 
     /**
-     * Creates new course registrations. Auto-fills student name if ID already
-     * exists. Loops until the user chooses to stop after reaching the minimum
-     * of 10 students.
+     * Creates new course registrations. 
      *
      * @param id       student ID
      * @param name     student name

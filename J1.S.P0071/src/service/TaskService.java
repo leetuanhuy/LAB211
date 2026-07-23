@@ -1,7 +1,8 @@
 package service;
 
-import constants.TaskConstants;
 import entity.Task;
+import exception.TaskException;
+import exception.TaskNotFoundException;
 
 import java.util.List;
 
@@ -20,44 +21,16 @@ public class TaskService {
     /**
      * Adds a new task after validating all business rules.
      *
-     * @param task
+     * @param task task object to add
      * @return the generated task ID
-     * @throws Exception if validation fails
+     * @throws TaskException if the task object is null
      */
-    public int addTask(Task task) throws Exception {
+    public int addTask(Task task) throws TaskException {
 
-        if (task.getTaskTypeID() < TaskConstants.MIN_TASK_TYPE_ID
-                || task.getTaskTypeID() > TaskConstants.MAX_TASK_TYPE_ID) {
-            throw new Exception("Task Type ID must be between "
-                    + TaskConstants.MIN_TASK_TYPE_ID
-                    + " and "
-                    + TaskConstants.MAX_TASK_TYPE_ID
-                    + "!");
+        if (task == null) {
+            throw new TaskException("Task object can not null");
         }
-
-        if (task.getPlanFrom() < TaskConstants.MIN_WORK_TIME
-                || task.getPlanFrom() > TaskConstants.MAX_WORK_TIME
-                || task.getPlanTo() < TaskConstants.MIN_WORK_TIME
-                || task.getPlanTo() > TaskConstants.MAX_WORK_TIME) {
-            throw new Exception("Time must be between "
-                    + TaskConstants.MIN_WORK_TIME
-                    + " and "
-                    + TaskConstants.MAX_WORK_TIME
-                    + "!");
-        }
-
-        if ((task.getPlanFrom() * 2) % 1 != 0 || (task.getPlanTo() * 2) % 1 != 0) {
-            throw new Exception(
-                    "Time must be in " + TaskConstants.WORK_TIME_STEP
-                    + " increments (8.0, 8.5, 9.0, ...)!");
-        }
-
-        if (task.getPlanFrom() >= task.getPlanTo()) {
-            throw new Exception("Plan From must be less than Plan To!");
-        }
-
         tasks.add(task);
-
         return task.getId();
     }
 
@@ -65,13 +38,11 @@ public class TaskService {
      * Deletes a task by its ID after verifying it exists.
      *
      * @param taskId the ID of the task to delete
-     * @throws Exception if the task ID does not exist
+     * @return 
+     *
      */
-    public void deleteTask(int taskId) throws Exception {
-        boolean removed = tasks.removeIf(task -> task.getId() == taskId);
-        if (!removed) {
-            throw new Exception("Task ID " + taskId + " does not exist!");
-        }
+    public boolean deleteTask(int taskId) {
+        return tasks.removeIf(task -> task.getId() == taskId);
     }
 
     /**
@@ -79,7 +50,7 @@ public class TaskService {
      *
      * @return list of all tasks
      */
-    public List<Task> getDataTasks() {
+    public List<Task> getTasks() {
         return tasks;
     }
 

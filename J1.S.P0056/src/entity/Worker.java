@@ -11,9 +11,6 @@ public class Worker {
     private double salary;
     private String workLocation;
 
-    public Worker() {
-    }
-
     /**
      * Constructs a new Worker with the specified details.
      *
@@ -23,7 +20,8 @@ public class Worker {
      * @param salary       the worker's salary
      * @param workLocation the worker's work location
      */
-    public Worker(String id, String name, int age, double salary, String workLocation) {
+    public Worker(String id, String name, int age, double salary,
+            String workLocation) {
         this.id = id;
         this.name = name;
         this.age = age;
@@ -70,6 +68,7 @@ public class Worker {
     public void setWorkLocation(String workLocation) {
         this.workLocation = workLocation;
     }
+
     @Override
     public String toString() {
         return String.format("%-10s%-20s%-10d%-15.2f%-20s",

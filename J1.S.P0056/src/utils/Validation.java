@@ -1,5 +1,6 @@
 package utils;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Scanner;
 
@@ -115,7 +116,7 @@ public class Validation {
             try {
                 dateFormat.parse(input);
                 return input;
-            } catch (Exception e) {
+            } catch (ParseException e) {
                 System.err.println("Error: Invalid date!");
             }
         }

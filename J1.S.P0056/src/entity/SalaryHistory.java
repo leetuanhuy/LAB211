@@ -12,8 +12,7 @@ public class SalaryHistory {
     private String status;
     private String date;
 
-    public SalaryHistory() {
-    }
+    
 
     /**
      * Constructs a new SalaryHistory record.

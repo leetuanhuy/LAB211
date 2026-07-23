@@ -5,6 +5,11 @@ import controller.WorkerController;
 import entity.SalaryHistory;
 import enums.SalaryStatus;
 import entity.Worker;
+import exception.AgeOutOfRangeException;
+import exception.DuplicateCodeException;
+import exception.InvalidIdException;
+import exception.InvalidSalaryException;
+import exception.WorkerException;
 import service.WorkerService;
 import utils.Validation;
 import java.util.ArrayList;
@@ -60,12 +65,7 @@ public class Main {
         }
     }
 
-    /**
-     * Displays the main menu and handles user option selection.
-     */
-    /**
-     * Prints the main menu options.
-     */
+    
     public static void displayMenu() {
         System.out.println("\n======== Worker Management ========");
         System.out.println("1. Add a Worker");
@@ -98,13 +98,21 @@ public class Main {
         String workLocation = Validation.getString("Enter Work Location: ",
                 "Work location cannot be empty.");
 
-        Worker worker = new Worker(id, name, age, salary, workLocation);
         try {
-            if (controller.addWorker(id, name, age, salary, workLocation)) {
-            } else {
-                System.out.println("Worker added successfully.");
-            }
-        } catch (Exception e) {
+            controller.addWorker(id, name, age, salary, workLocation);
+            System.out.println("Worker added successfully.");
+        } catch (InvalidIdException e) {
+            System.err.println("ID Error: " + e.getMessage());
+
+        } catch (AgeOutOfRangeException e) {
+            System.err.println("Age Error: " + e.getMessage());
+
+        } catch (DuplicateCodeException e) {
+            System.err.println("Code Error: " + e.getMessage());
+
+        } catch (InvalidSalaryException e) {
+            System.err.println("Salary Error: " + e.getMessage());
+        } catch (WorkerException e) {
             System.err.println("Error: " + e.getMessage());
         }
 
@@ -126,11 +134,13 @@ public class Main {
         );
 
         try {
-            if (controller.changeSalary(status, code, amount)) {
-                System.out.println(
-                        "Salary " + label.toLowerCase() + "d successfully.");
-            }
-        } catch (Exception e) {
+            controller.changeSalary(status, code, amount);
+            System.out.println(
+                    "Salary " + label.toLowerCase() + "d successfully.");
+
+        } catch (InvalidSalaryException e) {
+            System.err.println("Salary Error: " + e.getMessage());
+        } catch (WorkerException e) {
             System.err.println("Error: " + e.getMessage());
         }
 

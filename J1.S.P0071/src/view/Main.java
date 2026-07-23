@@ -3,6 +3,9 @@ package view;
 import constants.TaskConstants;
 import controller.TaskController;
 import entity.Task;
+import exception.InvalidTaskTimeException;
+import exception.TaskException;
+import exception.TaskNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import service.TaskService;
@@ -36,29 +39,21 @@ public class Main {
         System.out.println("========================================");
         System.out.println("   Task Management Program (CCRM)");
         System.out.println("========================================");
-
         while (true) {
-            try {
-                int choice = displayMenu();
-
-                switch (choice) {
-                    case 1 ->
-                        addTask(controller);
-                    case 2 ->
-                        deleteTask(controller);
-                    case 3 ->
-                        displayAll(controller);
-                    case 4 -> {
-                        System.out.println("\nThank you! Goodbye!");
-                        return;
-                    }
-                    default ->
-                        System.out.println("Invalid option!");
+            int choice = displayMenu();
+            switch (choice) {
+                case 1 ->
+                    addTask(controller);
+                case 2 ->
+                    deleteTask(controller);
+                case 3 ->
+                    displayAll(controller);
+                case 4 -> {
+                    System.out.println("\nThank you! Goodbye!");
+                    return;
                 }
-            } catch (NullPointerException ex) {
-                System.err.println("NullPointerException: " + ex.getMessage());
-            } catch (Exception ex) {
-                System.err.println("Error: " + ex.getMessage());
+                default ->
+                    System.out.println("Invalid option!");
             }
         }
     }
@@ -117,9 +112,9 @@ public class Main {
 
             System.out.println("\nSuccess! Task added with ID: " + taskId);
 
-        } catch (NumberFormatException ex) {
-            System.err.println("NumberFormatException: " + ex.getMessage());
-        } catch (Exception ex) {
+        } catch (InvalidTaskTimeException ex) {
+            System.err.println("Time Error : " + ex.getMessage());
+        } catch (TaskException ex) {
             System.err.println("Error: " + ex.getMessage());
         }
     }
@@ -137,10 +132,7 @@ public class Main {
             controller.deleteTask(taskId);
             System.out.println(
                     "\nSuccess! Task ID " + taskId + " has been deleted.");
-
-        } catch (NumberFormatException ex) {
-            System.err.println("NumberFormatException: " + ex.getMessage());
-        } catch (Exception ex) {
+        } catch (TaskNotFoundException ex) {
             System.err.println("Error: " + ex.getMessage());
         }
     }

@@ -4,6 +4,7 @@
  */
 package service;
 
+import exception.ExpenseException;
 import java.util.List;
 import model.Expense;
 
@@ -32,18 +33,22 @@ public class ExpenseService {
     /**
      * Add expense to list. ID auto increment, not reuse after delete.
      *
-     * @param expense
+     * @param expense the object expense
      * @return true if add success, false if false
+     * @throws exception.ExpenseException
      *
      */
-    public boolean add(Expense expense) {
+    public boolean add(Expense expense) throws ExpenseException {
+        if (expense == null) {
+            throw new ExpenseException("Expense object does not null");
+        }
         return expenses.add(expense);
     }
 
     /**
-     * Helper: Calculate total amount
+     * Calculate total amount
      *
-     * @return
+     * @return the sum of amount of all expense
      */
     public double getTotalAmount() {
         double total = 0;
@@ -57,16 +62,10 @@ public class ExpenseService {
      * Delete expense by id
      *
      * @param expenseId ID of expense to delete
-     * @return true delete success, false if ID not found
+     * @return true delete success
      */
     public boolean delete(int expenseId) {
-        for (Expense exp : expenses) {
-            if (exp.getId() == expenseId) {
-                expenses.remove(exp);
-                return true;
-            }
-        }
-        return false;
+        return expenses.removeIf(exp -> exp.getId() == expenseId);
     }
 
 }
